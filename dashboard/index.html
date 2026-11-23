@@ -112,7 +112,45 @@
   .chk input{width:auto}
   .recips{max-height:110px;overflow:auto;font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:8px;padding:6px 10px;margin-top:6px}
 
+  /* Lead engine */
+  .nbadge{margin-left:auto;background:var(--water);color:#fff;border-radius:999px;font-size:11px;padding:1px 7px;font-weight:700}
+  .warnbox{background:#FFF4DE;border:1px solid #F3D9A4;color:#7A4E00;border-radius:10px;padding:10px 14px;margin-bottom:14px}
+  .infobox{background:#EAF2FF;border:1px solid #CFE0FA;color:var(--navy);border-radius:10px;padding:10px 14px;margin-bottom:10px;font-size:13px}
+  .flow .lane{display:grid;grid-template-columns:200px 1fr 130px;gap:16px;align-items:center;padding:16px 0;border-bottom:1px dashed var(--line)}
+  .flow .lane:first-of-type{padding-top:4px}
+  .lane-head{display:flex;gap:10px;align-items:center}
+  .lane-ico{width:44px;height:44px;border-radius:11px;display:grid;place-items:center;font-size:22px;flex:none}
+  .lane-head small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+  .steps{display:flex;gap:24px;align-items:stretch}
+  .step{position:relative;flex:1 1 0;min-width:0;background:#F3F8FD;border:1px solid var(--line);border-radius:9px;padding:7px 10px;font-size:12.5px;line-height:1.25}
+  .step:not(:last-child)::after{content:"➜";position:absolute;right:-20px;top:50%;transform:translateY(-50%);color:var(--water);font-size:14px}
+  .step small{display:block;color:var(--muted);font-size:11px;margin-top:2px}
+  .step .cnt{position:absolute;top:-9px;right:-9px;background:var(--royal);color:#fff;border-radius:999px;font-size:10.5px;font-weight:700;padding:1px 7px;border:2px solid #fff}
+  .lane-out{text-align:right;font-size:12px;color:var(--muted)} .lane-out b{font-size:24px;color:var(--navy);display:block;line-height:1.1}
+  .merge{margin-top:14px;background:var(--navy);color:#fff;border-radius:10px;padding:12px 16px;display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+  .merge b{font-size:20px;color:var(--sky)} .merge span{color:#C9D9F2;font-size:12px}
+  .timeline{display:grid;grid-template-columns:repeat(5,1fr)}
+  .ph{padding:16px 12px 4px 0;border-top:4px solid var(--line);position:relative}
+  .ph::before{content:"";position:absolute;top:-11px;left:0;width:14px;height:14px;border-radius:50%;background:#fff;border:4px solid var(--line)}
+  .ph.done{border-color:var(--water)} .ph.done::before{background:var(--water);border-color:var(--water)}
+  .ph.now{border-color:var(--royal)} .ph.now::before{border-color:var(--royal);background:var(--sky);box-shadow:0 0 0 5px rgba(63,169,245,.25)}
+  .ph .when{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--royal)}
+  .ph.now .when::after{content:" · you are here";color:var(--good)}
+  .ph b{display:block;margin:3px 0 5px} .ph ul{margin:0;padding-left:16px;font-size:12px;color:var(--muted)} .ph li{margin:2px 0}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap} .tabs button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:4px 11px;cursor:pointer;font-size:12px;color:var(--text)}
+  .tabs button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .draft{border:1px solid var(--line);border-radius:10px;margin-bottom:8px;background:#fff}
+  .draft.open{border-color:var(--water);box-shadow:0 2px 12px rgba(30,91,198,.08)}
+  .dhd{display:flex;gap:10px;align-items:center;padding:10px 12px;cursor:pointer;flex-wrap:wrap}
+  .dbd{padding:0 12px 12px} .dbd label{margin-top:8px}
+  .k-r{background:#EAF2FF;color:var(--royal)} .k-c{background:#FFF4DE;color:#9A6200} .k-n{background:#E1F6EA;color:var(--good)}
+  .hint{background:#F3F8FD;border-radius:8px;padding:8px 10px;font-size:12.5px;margin-bottom:4px}
+  .rk{grid-template-columns:repeat(7,minmax(130px,1fr))} .rk .col{min-height:110px} .rk .jc{padding:8px} .rk .jc small{display:block}
+  .g21{grid-template-columns:2fr 1fr}
+  .credit{background:#E1F6EA;color:#11603A;border-radius:8px;padding:8px 12px;margin-top:10px;font-size:13px}
+
   @media (max-width:980px){
+    .flow .lane{grid-template-columns:1fr} .steps{flex-wrap:wrap} .step{flex:1 1 140px} .lane-out{text-align:left} .timeline{grid-template-columns:1fr} .g21{grid-template-columns:1fr}
     .app{grid-template-columns:1fr} aside{position:static;height:auto;flex-direction:row;flex-wrap:wrap;align-items:center}
     aside .logo{width:150px;padding:0 10px} nav{display:flex;flex-wrap:wrap} nav button{width:auto} aside .foot{display:none}
     .g4,.g3{grid-template-columns:repeat(2,1fr)} .g2{grid-template-columns:1fr}
@@ -126,6 +164,7 @@
     <div class="logo"><img src="/logo.png" alt="Nashoba Power Wash"></div>
     <nav id="nav">
       <button data-view="overview" class="active"><span class="ico">🏠</span>Overview</button>
+      <button data-view="leads"><span class="ico">🎯</span>Lead Engine<span class="nbadge" id="leadBadge" style="display:none"></span></button>
       <button data-view="pipeline"><span class="ico">📋</span>Jobs &amp; Quotes</button>
       <button data-view="schedule"><span class="ico">📅</span>Schedule</button>
       <button data-view="calculator"><span class="ico">🧮</span>Quote Calculator</button>
@@ -166,6 +205,59 @@
       <div class="grid g2" style="margin-top:16px">
         <div class="card"><h2>Revenue by service</h2><div id="bySvc"></div></div>
         <div class="card"><h2>Notes</h2><textarea id="notes" style="min-height:150px" placeholder="Ideas, reminders, anything…"></textarea></div>
+      </div>
+    </section>
+
+    <!-- LEAD ENGINE -->
+    <section class="view" id="v-leads">
+      <header class="top"><div><h1>Lead Engine</h1><div class="sub">Three ways to fill the spring 2027 schedule. Claude finds people and writes the messages. Nothing sends until you approve it.</div></div>
+        <div class="row">
+          <button class="btn ghost" onclick="openLeadSettings()">⚙ Settings</button>
+          <button class="btn ghost" onclick="openPastCust()">+ Past customer</button>
+          <button class="btn ghost" onclick="openAddRealtors()">+ Realtors</button>
+          <button class="btn" onclick="document.getElementById('queueCard').scrollIntoView({behavior:'smooth'})">Review drafts →</button>
+        </div></header>
+      <div id="leadWarn"></div>
+
+      <div class="hero">
+        <div style="position:relative;z-index:1"><div class="big" id="lhBig">—</div><p id="lhText"></p></div>
+        <div style="min-width:280px;position:relative;z-index:1">
+          <div class="row" style="justify-content:space-between;margin-bottom:6px"><span>Spring goal: jobs booked</span><b id="lhGoalTxt"></b></div>
+          <div class="bar"><div id="lhGoalBar" style="width:0"></div></div>
+          <div class="row" style="justify-content:space-between;margin:12px 0 6px"><span>Realtors emailed this week</span><b id="lhWeekTxt"></b></div>
+          <div class="bar"><div id="lhWeekBar" style="width:0"></div></div>
+          <div id="lhGoalFix" style="margin-top:8px;font-size:12px;color:#C9D9F2"></div>
+        </div>
+      </div>
+
+      <div class="card flow"><div class="spread"><h2 style="margin:0">How leads flow in</h2><small class="muted">Blue badges = drafts waiting for you at that step</small></div><div id="flow"></div></div>
+
+      <div class="card" style="margin-top:16px"><h2>Season plan</h2><div class="timeline" id="timeline"></div></div>
+
+      <div class="grid g21" style="margin-top:16px">
+        <div class="card" id="queueCard">
+          <div class="spread"><h2 style="margin:0">✅ Approval queue</h2><div class="tabs" id="qTabs"></div></div>
+          <div id="queueNote"></div>
+          <div id="queue"></div>
+        </div>
+        <div>
+          <div class="card"><h2>🗓 Your weekly routine (~1 hr)</h2><div id="routine"></div></div>
+          <div class="card" style="margin-top:16px"><h2>🎁 Referral credits</h2><div id="credits"></div></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <div class="spread"><h2 style="margin:0">🏡 Realtor pipeline</h2><small class="muted">Click an agent to update them. Move to <b>Replied</b>, <b>Partner</b> or <b>Not interested</b> to stop their follow-ups.</small></div>
+        <div class="kanban rk" id="rKanban"></div>
+      </div>
+
+      <div class="grid g2" style="margin-top:16px">
+        <div class="card"><div class="spread"><h2 style="margin:0">⭐ Past customers</h2>
+          <div class="row"><button class="btn ghost sm" onclick="openPastCust()">+ Add</button><button class="btn sm" onclick="draftRebook()">Draft spring re-booking emails</button></div></div>
+          <div id="pastCust"></div></div>
+        <div class="card"><div class="spread"><h2 style="margin:0">🚪 Neighbor door hangers</h2>
+          <button class="btn ghost sm" onclick="window.open('/hanger','_blank')">🖨 Blank hanger</button></div>
+          <div id="hangers"></div></div>
       </div>
     </section>
 
@@ -323,6 +415,9 @@
     <div><label>Source</label><select name="source"><option>Website quote form</option><option>Google search</option><option>Google Ads</option><option>Google Business Profile</option><option>Email campaign</option><option>Referral</option><option>Facebook Ads</option><option>Flyer / door hanger</option><option>Yard sign</option><option>Real estate agent</option><option>Repeat customer</option><option>Other</option></select></div>
     <div><label>Campaign</label><select name="campaign"></select></div>
     <div style="display:flex;align-items:flex-end"><label class="chk"><input type="checkbox" name="noMarketing"> Don't send marketing emails</label></div>
+    <div><label>Referred by (past customer)</label><input name="referredBy" list="custList" placeholder="Who sent them?"></div>
+    <div><label>Referral credit applied ($)</label><input name="creditUsed" type="number" placeholder="0"></div>
+    <div class="full" id="creditNote" style="display:none"></div>
     <div><label>Quote ($)</label><input name="quote" type="number"></div>
     <div><label>Est. hours</label><input name="hours" type="number" step="0.5"></div>
     <div><label>Job date</label><input name="date" type="date"></div>
@@ -412,7 +507,71 @@
   <div class="df"><span></span><div class="row"><button type="button" class="btn ghost" onclick="setupDlg.close()">Cancel</button><button class="btn" value="save">Save</button></div></div>
 </form></dialog>
 
-<div id="toast" style="position:fixed;bottom:22px;right:22px;background:var(--ink);color:#fff;padding:12px 16px;border-radius:10px;max-width:380px;box-shadow:0 8px 30px rgba(0,0,0,.3);display:none;z-index:99"></div>
+<!-- Lead engine dialogs -->
+<dialog id="realtorDlg"><form method="dialog" id="realtorForm">
+  <div class="dh" id="realtorTitle">Realtor</div>
+  <div class="db"><div class="form">
+    <div><label>Name</label><input name="name" required></div>
+    <div><label>Stage</label><select name="stage"></select></div>
+    <div><label>Email</label><input name="email" readonly style="background:#F3F8FD"></div>
+    <div><label>Phone</label><input name="phone"></div>
+    <div><label>Brokerage</label><input name="brokerage"></div>
+    <div><label>Town</label><input name="town" list="towns"></div>
+    <div class="full"><label>Current listing (from Claude's research)</label><input name="listing"></div>
+    <div class="full"><label>Personal opening line used in the intro email</label><textarea name="hook"></textarea></div>
+    <div class="full"><label>Notes (what they said, listings coming up…)</label><textarea name="notes"></textarea></div>
+  </div>
+  <div id="realtorLog" class="muted" style="font-size:12px;margin-top:12px"></div></div>
+  <div class="df"><button type="button" class="btn danger" id="delRealtor">Delete</button>
+    <div class="row"><button type="button" class="btn ghost" onclick="realtorDlg.close()">Cancel</button><button class="btn" value="save">Save</button></div></div>
+</form></dialog>
+
+<dialog id="addRDlg" style="width:min(720px,94vw)"><form method="dialog" id="addRForm">
+  <div class="dh">Add realtors</div>
+  <div class="db">
+    <div class="infobox"><b>Easiest way:</b> open Claude Code in this folder and type <code>/find-realtors</code>. Claude researches about 20 local agents, writes a personal opening line for each one, and they show up here automatically.</div>
+    <label>Or paste them yourself, one per line: <i>name, email, brokerage, town, current listing</i></label>
+    <textarea name="paste" style="min-height:160px;font-family:ui-monospace,monospace;font-size:12px" placeholder="Jane Smith, jane@example-realty.com, Example Realty, Acton, 12 Main St ($689k)"></textarea>
+    <small class="muted">Each agent gets an intro email draft in the approval queue. Duplicate emails are skipped.</small>
+  </div>
+  <div class="df"><span></span><div class="row"><button type="button" class="btn ghost" onclick="addRDlg.close()">Cancel</button><button class="btn" value="save">Add</button></div></div>
+</form></dialog>
+
+<dialog id="pastDlg"><form method="dialog" id="pastForm">
+  <div class="dh">Add a past customer</div>
+  <div class="db">
+    <div class="infobox">Tip: type <code>/find-past-customers</code> in Claude Code to pull them from your Gmail. Add anyone else here, like people you only texted or who paid by Venmo.</div>
+    <div class="form">
+      <div><label>Name</label><input name="name" required></div>
+      <div><label>Year</label><select name="year"><option>2026</option><option>2025</option></select></div>
+      <div><label>Email</label><input name="email" type="email"></div>
+      <div><label>Phone</label><input name="phone" type="tel"></div>
+      <div><label>Town</label><input name="town" list="towns"></div>
+      <div><label>Service</label><select name="service"></select></div>
+      <div><label>Amount paid ($, optional)</label><input name="paid" type="number"></div>
+    </div>
+  </div>
+  <div class="df"><span></span><div class="row"><button type="button" class="btn ghost" onclick="pastDlg.close()">Close</button><button class="btn" value="save">Add &amp; next</button></div></div>
+</form></dialog>
+
+<dialog id="lsDlg"><form method="dialog" id="lsForm">
+  <div class="dh">Lead Engine settings</div>
+  <div class="db"><div class="form">
+    <div><label>Your phone (goes in emails &amp; hangers)</label><input name="phone" placeholder="(978) 555-0123"></div>
+    <div><label>Referral credit ($ off per booked friend)</label><input name="referralCredit" type="number"></div>
+    <div class="full"><label>Website quote page (QR code on hangers)</label><input name="website" placeholder="https://www.nashobapowerwash.com/quote"></div>
+    <div class="full"><label>Google review link</label><input name="reviewLink" placeholder="https://g.page/r/…/review"></div>
+    <div class="full"><label>Before/after photo album link (optional, added to realtor emails)</label><input name="photosLink" placeholder="Google Drive / Photos shared link"></div>
+    <div class="full"><label>Realtors per week</label><input name="weeklyTarget" type="number"></div>
+    <div><label>Follow-up 1 after (days)</label><input name="fu1Days" type="number"></div>
+    <div><label>Follow-up 2 after (days)</label><input name="fu2Days" type="number"></div>
+    <div class="full muted" id="lsAddr" style="font-size:12px"></div>
+  </div></div>
+  <div class="df"><span></span><div class="row"><button type="button" class="btn ghost" onclick="lsDlg.close()">Cancel</button><button class="btn" value="save">Save</button></div></div>
+</form></dialog>
+<datalist id="custList"></datalist>
+
+<div id="toast"style="position:fixed;bottom:22px;right:22px;background:var(--ink);color:#fff;padding:12px 16px;border-radius:10px;max-width:380px;box-shadow:0 8px 30px rgba(0,0,0,.3);display:none;z-index:99"></div>
 <datalist id="towns"><option>Westford</option><option>Chelmsford</option><option>Groton</option><option>Acton</option><option>Tewksbury</option><option>Littleton</option><option>Lowell</option><option>Ayer</option><option>Burlington</option><option>Concord</option><option>Carlisle</option></datalist>
 
 <script>
@@ -452,7 +611,7 @@ const DEFAULT_TODOS = [
 const DAY_CHECK = ["Weather checked, no rain","Water source confirmed","Scope reviewed with customer","Bleach, foam cannon, pump sprayer packed","Surface cleaner / turbo nozzle packed","Fuel for GX200","Plants, windows & fabrics pre-rinsed / protected","Before photos taken","After photos taken","Payment collected (cash / check / Venmo)"];
 
 const OLD_LOCAL_KEY="npw-dashboard-v1"; // from the browser-only version
-function base(){return {jobs:[],expenses:[],campaigns:[],links:DEFAULT_LINKS,todos:DEFAULT_TODOS,day:{},notes:"",goal:20,mkt:{},google:{}};}
+function base(){return {jobs:[],expenses:[],campaigns:[],links:DEFAULT_LINKS,todos:DEFAULT_TODOS,day:{},notes:"",goal:20,mkt:{},google:{},leads:{},hangers:{}};}
 let S = base();
 let MK = null, mkSeq = 0; // Google marketing stats (loaded when the Marketing tab opens)
 
@@ -472,6 +631,7 @@ async function loadState(){
     S=Object.assign(base(),d.settings,{jobs:d.jobs,expenses:d.expenses,campaigns:d.campaigns||[],google:d.google});
   }catch(e){toast("Can't reach the dashboard server. Is it running? ("+esc(e.message)+")",true);}
   render();
+  loadLeads();
   await migrateLocal();
 }
 // one-time move of data saved by the browser-only version
@@ -501,6 +661,7 @@ function show(v){
   document.querySelectorAll(".view").forEach(x=>x.classList.toggle("active",x.id==="v-"+v));
   location.hash=v;
   if(v==="marketing"&&!MK) loadMarketing();
+  if(v==="leads") loadLeads();
 }
 if(location.hash) show(location.hash.slice(1));
 
@@ -522,6 +683,8 @@ function openJob(id,prefill){
   $("#delJob").style.visibility=id?"visible":"hidden";
   $("#msgBox").style.display=id?"block":"none";
   if(id) fillTemplate();
+  $("#custList").innerHTML=[...new Set(S.jobs.filter(x=>x.status==="Completed").map(x=>x.name.trim()))].sort().map(n=>`<option value="${esc(n)}">`).join("");
+  showCreditNote(j.name);
   jobDlg.showModal();
 }
 jobForm.onsubmit=async(e)=>{
@@ -878,6 +1041,310 @@ $("#discoverBtn").onclick=async()=>{
   }catch(e){$("#discoverMsg").textContent=e.message;}
 };
 
+/* ================= LEAD ENGINE ================= */
+let L={realtors:[],drafts:[],config:{},stages:["Queued","Sent","Follow-up 1","Follow-up 2","Replied","Partner","Not interested"]};
+let qFilter="all", openDraftId=null, editingRealtor=null;
+const STEP_LABEL={intro:"Realtor intro",fu1:"Follow-up 1",fu2:"Last follow-up",rebook:"Spring re-booking",review:"Thank-you + review"};
+const STEP_ORDER={fu1:0,fu2:1,review:2,intro:3,rebook:4};
+const COMMERCIAL_STEPS=["intro","fu1","fu2","rebook"];
+const lcfg=()=>Object.assign({weeklyTarget:20,fu1Days:5,fu2Days:12,referralCredit:50},L.config||{},S.leads||{});
+
+const srcIs=(j,list)=>list.includes(j.source)&&!j.pastImport;
+const WON=["Booked","Completed"];
+
+async function loadLeads(){
+  try{
+    const d=await api("GET","/api/leads"); L=Object.assign(L,d);
+    const n=d.inbox||{};
+    if(n.files?.length){
+      toast(`Imported from Claude: ${n.realtors} realtor${n.realtors===1?"":"s"}, ${n.customers} past customer${n.customers===1?"":"s"}`+(n.skipped?` (${n.skipped} duplicates skipped)`:"")+".");
+      if(n.customers){const s=await api("GET","/api/state");S.jobs=s.jobs;render();return;}
+    }
+  }catch(e){console.warn("Lead engine:",e.message);}
+  renderLeads();
+}
+
+function referralLedger(){
+  const amt=+lcfg().referralCredit||50, led={}, key=s=>String(s||"").trim().toLowerCase();
+  const get=(n)=>led[key(n)]||(led[key(n)]={name:String(n).trim(),earned:0,used:0,done:[],pending:[]});
+  for(const j of S.jobs){
+    if(!j.referredBy||key(j.referredBy)===key(j.name)) continue;
+    if(j.status==="Completed"){get(j.referredBy).earned+=amt;get(j.referredBy).done.push(j.name);}
+    else if(j.status!=="Lost") get(j.referredBy).pending.push(j.name);
+  }
+  for(const j of S.jobs) if(+j.creditUsed>0) get(j.name).used+=+j.creditUsed;
+  return Object.values(led).map(x=>Object.assign(x,{owed:x.earned-x.used}));
+}
+function showCreditNote(name){
+  const el=$("#creditNote"); const x=name&&referralLedger().find(r=>r.name.toLowerCase()===String(name).trim().toLowerCase());
+  if(x&&x.owed>0){el.style.display="block";el.innerHTML=`<div class="credit">🎁 <b>${esc(x.name)} has ${money(x.owed)} in referral credit</b> (referred ${x.done.map(esc).join(", ")}). Take it off this quote and enter the amount under "Referral credit applied".</div>`;}
+  else el.style.display="none";
+}
+jobForm.name.addEventListener("change",()=>showCreditNote(jobForm.name.value));
+jobForm.referredBy.addEventListener("change",()=>{if(jobForm.referredBy.value.trim()) jobForm.source.value="Referral";});
+
+function pastCustomers(){
+  const seen=new Map();
+  for(const j of S.jobs.filter(j=>j.status==="Completed")){
+    const k=(j.email||j.name).trim().toLowerCase(); if(!seen.has(k)) seen.set(k,j);
+  }
+  return [...seen.values()];
+}
+
+function renderLeads(){
+  if(!$("#v-leads")) return;
+  const c=lcfg(), today=todayISO(), pending=L.drafts.filter(d=>d.status==="pending");
+  const P=s=>pending.filter(d=>d.step===s).length;
+  const badge=$("#leadBadge"); badge.textContent=pending.length; badge.style.display=pending.length?"inline-block":"none";
+
+  /* setup warnings */
+  const miss=[];
+  if(!c.phone) miss.push("your phone number");
+  if(!c.website) miss.push("your website quote-page link (for the hanger QR code)");
+  if(!c.reviewLink) miss.push("your Google review link");
+  if(!String((S.mkt||{}).mailingAddress||"").trim()) miss.push(`a mailing address (<a href="#" onclick="openMktSetup();return false">Marketing → Google setup</a>; required by law on marketing emails, a PO box is fine)`);
+  $("#leadWarn").innerHTML=miss.length?`<div class="warnbox">⚙ <b>Finish setup:</b> add ${miss.join(", ")}. <a href="#" onclick="openLeadSettings();return false">Open settings</a></div>`:"";
+
+  /* hero */
+  const started=L.drafts.some(d=>d.kind==="realtor"&&d.status==="sent");
+  $("#lhBig").textContent=pending.length+" draft"+(pending.length===1?"":"s");
+  $("#lhText").innerHTML=pending.length?"waiting for your approval. Nothing goes out until you say so."
+    :started?"waiting. You're all caught up."
+    :"waiting. Whenever you're ready to start, type <b>/find-realtors</b> in Claude Code.";
+  const yr=seasonStart().getFullYear();
+  const booked=S.jobs.filter(j=>WON.includes(j.status)&&!j.pastImport&&(!j.date||j.date.startsWith(yr))).length;
+  $("#lhGoalTxt").textContent=booked+" / "+S.goal; $("#lhGoalBar").style.width=Math.min(100,booked/S.goal*100)+"%";
+  const weekAgo=new Date(Date.now()-7*864e5).toISOString();
+  const wk=L.drafts.filter(d=>d.step==="intro"&&d.status==="sent"&&d.sentAt>=weekAgo).length;
+  $("#lhWeekTxt").textContent=wk+" / "+c.weeklyTarget; $("#lhWeekBar").style.width=Math.min(100,wk/c.weeklyTarget*100)+"%";
+  $("#lhGoalFix").innerHTML=S.goal<30?`Your plan is 30–40 jobs before mid-May. <a href="#" style="color:#8FC8F7" onclick="S.goal=35;saveSet('goal');return false">Set the goal to 35</a>`:"";
+
+  /* flow */
+  const R=L.realtors, cnt=st=>R.filter(r=>r.stage===st).length;
+  const chan=list=>{const js=S.jobs.filter(j=>srcIs(j,list));return {n:js.length,won:js.filter(j=>WON.includes(j.status)).length,rev:js.filter(j=>j.status==="Completed").reduce((a,j)=>a+(+j.paid||+j.quote||0),0)};};
+  const rC=chan(["Real estate agent"]), cC=chan(["Referral","Repeat customer"]), nC=chan(["Flyer / door hanger"]);
+  const dropped=Object.values(S.hangers||{}).reduce((a,h)=>a+(+h.count||0),0);
+  const refs=S.jobs.filter(j=>j.referredBy).length, past=pastCustomers().length;
+  const step=(ico,t,sub,n)=>`<div class="step">${n?`<span class="cnt" title="drafts waiting">${n}</span>`:""}${ico} <b>${t}</b><small>${sub}</small></div>`;
+  const lane=(ico,bg,title,sub,steps,o)=>`<div class="lane"><div class="lane-head"><span class="lane-ico" style="background:${bg}">${ico}</span><div><b>${title}</b><small>${sub}</small></div></div>
+    <div class="steps">${steps.join("")}</div><div class="lane-out"><b>${o.n}</b>leads · ${o.won} booked</div></div>`;
+  $("#flow").innerHTML=
+    lane("🏡","#EAF2FF","Realtors","Pre-listing washes. Sell on speed &amp; quality",[
+      step("🔎","Claude finds agents",`/find-realtors · ${c.weeklyTarget}/wk · ${R.length} so far`),
+      step("✉️","Intro email","personal first line",P("intro")),
+      step("⏱","Follow-up",`day ${c.fu1Days} if no reply`,P("fu1")),
+      step("⏱","Last follow-up",`day ${c.fu2Days}, then stop`,P("fu2")),
+      step("🤝","Reply → partner",`${cnt("Replied")} replied · ${cnt("Partner")} partners`)],rC)+
+    lane("⭐","#FFF4DE","Past customers","Re-book, reviews &amp; referrals",[
+      step("📇","Customer list",`${past} past customers`),
+      step("✉️","Spring re-booking","before spring",P("rebook")),
+      step("⭐","Thank-you + review","auto-drafted after every job",P("review")),
+      step("🎁",`$${c.referralCredit} referral credit`,`${refs} referral${refs===1?"":"s"} so far`)],cC)+
+    lane("🚪","#E1F6EA","Neighbors","Door hangers around every job",[
+      step("✅","Job completed","any service"),
+      step("🖨","Print hangers","PDF → Vistaprint 4.25×11"),
+      step("🚪","Walk 20–30 doors",`${dropped} dropped so far`),
+      step("📱","QR → quote form","tag lead “Flyer / door hanger”")],nC)+
+    `<div class="merge">📋 <span>All three land in<br><b style="font-size:14px;color:#fff">Jobs &amp; Quotes</b></span>
+      <div><b>${rC.n+cC.n+nC.n}</b><br><span>leads</span></div><div><b>${rC.won+cC.won+nC.won}</b><br><span>booked</span></div>
+      <div><b>${money(rC.rev+cC.rev+nC.rev)}</b><br><span>revenue</span></div>
+      <a href="#" onclick="show('pipeline');return false" style="margin-left:auto;color:#8FC8F7">Open Jobs &amp; Quotes →</a></div>`;
+
+  /* timeline */
+  const marDay=yr+"-03-01", seasonDay=yr+"-05-15";
+  const rebooked=L.drafts.some(d=>d.step==="rebook"&&d.status==="sent");
+  // "You are here" moves with what you've actually done, not a fixed launch date.
+  const phases=[
+    {on:true,when:"Now",t:"Get ready",li:["Insurance quotes (agents ask for it)","Fill in ⚙ Settings","Add past customers","Take before/after photos"]},
+    {on:started,when:"When you're ready",t:"Realtor outreach starts",li:["Mondays: /find-realtors","Approve ~"+c.weeklyTarget+" intros a week","Follow-ups get drafted for you"]},
+    {on:rebooked,when:"Before spring",t:"Spring re-booking",li:["Draft re-booking emails to past customers","Each one mentions the $"+c.referralCredit+" referral credit"]},
+    {on:today>=marDay,when:"March → mid-May",t:"Fill the calendar",li:["Turn replies into partner agents","Quote fast, scope in writing","Goal: "+S.goal+" jobs booked"]},
+    {on:today>=seasonDay,when:"Mid-May → August",t:"Season",li:["Review request after every job","Hangers on every street you work","Log each drop"]}];
+  let nowI=0; phases.forEach((p,i)=>{if(p.on) nowI=i;});
+  $("#timeline").innerHTML=phases.map((p,i)=>`<div class="ph ${i<nowI?"done":i===nowI?"now":""}"><div class="when">${p.when}</div><b>${p.t}</b><ul>${p.li.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`).join("");
+
+  /* queue */
+  const groups={all:pending,realtor:pending.filter(d=>d.kind==="realtor"),customer:pending.filter(d=>d.kind==="customer")};
+  $("#qTabs").innerHTML=[["all","All"],["realtor","🏡 Realtors"],["customer","⭐ Customers"]].map(([k,t])=>`<button type="button" class="${qFilter===k?"on":""}" onclick="qFilter='${k}';renderLeads()">${t} (${groups[k].length})</button>`).join("");
+  const list=[...groups[qFilter]].sort((a,b)=>STEP_ORDER[a.step]-STEP_ORDER[b.step]||a.created.localeCompare(b.created));
+  const notes=[];
+  if(!S.google?.connected) notes.push(`Google isn't connected, so use <b>Open in Gmail</b>, hit Send there, then click <b>I sent it ✓</b> here.`);
+  $("#queueNote").innerHTML=notes.map(n=>`<div class="infobox">${n}</div>`).join("");
+  if(openDraftId&&!list.some(d=>d.id===openDraftId)) openDraftId=null;
+  if(!openDraftId&&list.length) openDraftId=list[0].id;
+  $("#queue").innerHTML=list.length?list.slice(0,25).map(draftCard).join("")+(list.length>25?`<div class="muted" style="text-align:center;padding:8px">+ ${list.length-25} more after these</div>`:"")
+    :`<div class="empty">Nothing waiting. 🎉<br><small>New drafts appear when you run <code>/find-realtors</code>, mark a job Completed, or click “Draft spring re-booking emails”.</small></div>`;
+
+  /* routine */
+  const lastBatch=R.map(r=>r.added).sort().pop();
+  const doneJobs=S.jobs.filter(j=>j.status==="Completed"&&!j.pastImport);
+  const noDrop=doneJobs.filter(j=>!(S.hangers||{})[j.id]).length;
+  const rt=(ico,t,sub)=>`<div class="check"><span>${ico}</span><span style="flex:1"><b>${t}</b><br><small class="muted">${sub}</small></span></div>`;
+  $("#routine").innerHTML=
+    rt("🔎","Monday: type /find-realtors in Claude Code",`Adds ~${c.weeklyTarget} agents and drafts their intros. ${lastBatch?"Last run "+fmtDate(lastBatch.slice(0,10)):"Not run yet"}.`)+
+    rt("✅",`Monday: approve drafts`,`${pending.length} waiting right now (about 30–45 min)`)+
+    rt("💬","When an agent replies","Move them to Replied or Partner below. That stops their follow-ups.")+
+    rt("🚪","After every completed job","Print the hanger and walk the street"+(noDrop?` (<b>${noDrop}</b> job${noDrop===1?"":"s"} with no drop logged)`:""))+
+    rt("🏷","Every new lead","Set its Source (and “Referred by”) in Jobs &amp; Quotes");
+
+  /* credits */
+  const led=referralLedger().filter(x=>x.earned||x.pending.length||x.used);
+  $("#credits").innerHTML=led.length?`<table><thead><tr><th>Customer</th><th>Earned</th><th>Used</th><th>Owed</th></tr></thead>${led.sort((a,b)=>b.owed-a.owed).map(x=>`<tr><td>${esc(x.name)}${x.pending.length?`<br><small class="muted">${x.pending.length} friend${x.pending.length===1?"":"s"} not completed yet</small>`:""}</td><td>${money(x.earned)}</td><td>${money(x.used)}</td><td><b style="color:${x.owed>0?"var(--good)":"inherit"}">${money(x.owed)}</b></td></tr>`).join("")}</table>`
+    :`<div class="muted" style="font-size:13px">When a new lead was referred, fill in <b>Referred by</b> on their job. Once that job is <b>Completed</b>, the referrer earns ${money(c.referralCredit)} off their next job. The dashboard tracks what's owed and reminds you when you open their job.</div>`;
+
+  /* realtor kanban */
+  $("#rKanban").innerHTML=L.stages.map(st=>{
+    const rs=R.filter(r=>r.stage===st).sort((a,b)=>(b.added||"").localeCompare(a.added||""));
+    return `<div class="col" style="max-height:440px;overflow:auto"><h3>${st}<span>${rs.length}</span></h3>${rs.map(r=>`<div class="jc" onclick="openRealtor('${r.id}')"><b>${esc(r.name)}</b><small>${esc(r.brokerage||"")}</small><small>📍 ${esc(r.town||"—")}</small></div>`).join("")||`<div class="muted" style="font-size:12px;padding:6px">—</div>`}</div>`;
+  }).join("");
+
+  /* past customers */
+  const pc=pastCustomers(), rb=new Map(L.drafts.filter(d=>d.step==="rebook").map(d=>[(d.to||d.name).toLowerCase(),d.status]));
+  $("#pastCust").innerHTML=pc.length?`<table><thead><tr><th>Name</th><th>Town</th><th>Service</th><th>Contact</th><th>Re-booking</th></tr></thead>${pc.slice(0,10).map(j=>{const s=rb.get((j.email||j.name).toLowerCase());
+      return `<tr onclick="openJob('${j.id}')" style="cursor:pointer"><td>${esc(j.name)}${j.noMarketing?` <small class="muted">(opted out)</small>`:""}</td><td>${esc(j.town||"")}</td><td><small>${esc(j.service||"")}</small></td><td>${j.email?"✉️":""}${j.phone?" 📱":""}${!j.email&&!j.phone?`<small style="color:var(--bad)">none</small>`:""}</td><td>${s?`<span class="pill ${s==="sent"?"s-Completed":s==="pending"?"s-Quoted":"s-Lost"}">${s==="pending"?"drafted":s}</span>`:"—"}</td></tr>`;}).join("")}</table>`+(pc.length>10?`<div class="muted" style="font-size:12px;margin-top:6px">+ ${pc.length-10} more (see the Completed column in Jobs &amp; Quotes)</div>`:"")
+    :`<div class="empty">No past customers yet.<br><small>Type <code>/find-past-customers</code> in Claude Code to pull them from Gmail, then add anyone else with “+ Add”.</small></div>`;
+
+  /* hangers */
+  const hj=[...doneJobs].sort((a,b)=>(b.date||"").localeCompare(a.date||"")).slice(0,8);
+  $("#hangers").innerHTML=`<div class="stats" style="margin-bottom:12px"><div><b>${dropped}</b>hangers dropped</div><div><b>${nC.n}</b>leads from hangers · ${nC.won} booked</div></div>`+
+    (hj.length?`<table>${hj.map(j=>{const h=(S.hangers||{})[j.id];return `<tr><td><b>${esc(j.town||"—")}</b><br><small class="muted">${esc(j.service||"")} · ${fmtDate(j.date)}</small></td>
+      <td>${h?`<span class="pill s-Completed">${h.count} dropped</span><br><small class="muted">${esc(h.streets||"")}</small>`:`<span class="pill s-Quoted">not yet</span>`}</td>
+      <td style="text-align:right;white-space:nowrap"><button class="btn ghost sm" onclick="window.open('/hanger?job=${j.id}','_blank')">🖨 Hanger</button> <button class="btn ghost sm" onclick="logDrop('${j.id}')">Log drop</button></td></tr>`;}).join("")}</table>`
+    :`<div class="empty">After each completed job, its hanger shows up here.<br><small>The hanger never shows the customer's name or address. It just says “we just restored a patio on your street”.</small></div>`);
+}
+
+function draftCard(d){
+  const open=openDraftId===d.id, r=d.kind==="realtor"?L.realtors.find(x=>x.id===d.refId):null;
+  const sub=r?[r.brokerage,r.town].filter(Boolean).map(esc).join(" · "):esc(d.to||d.phone||"no contact info");
+  const g=S.google?.connected;
+  return `<div class="draft ${open?"open":""}">
+    <div class="dhd" onclick="openDraftId=${open?"null":`'${d.id}'`};renderLeads()"><span class="pill ${d.kind==="realtor"?"k-r":"k-c"}">${d.kind==="realtor"?"🏡":"⭐"} ${STEP_LABEL[d.step]}</span><b>${esc(d.name)}</b><small class="muted">${sub}</small><span class="muted" style="margin-left:auto">${open?"▾":"▸"}</span></div>
+    ${open?`<div class="dbd">
+      ${r&&(r.listing||r.profileUrl)?`<div class="hint">🔎 <b>Claude's research:</b> ${esc(r.listing||"")}${r.profileUrl?` · <a href="${esc(r.profileUrl)}" target="_blank" rel="noopener">agent page</a>`:""}</div>`:""}
+      <label>To</label><input value="${esc(d.to)}" placeholder="${d.phone?"No email. Use Text instead":"email address"}" oninput="draftEdit('${d.id}','to',this.value)">
+      <label>Subject</label><input value="${esc(d.subject)}" oninput="draftEdit('${d.id}','subject',this.value)">
+      <label>Message (edit anything)</label><textarea style="min-height:280px" oninput="draftEdit('${d.id}','body',this.value)">${esc(d.body)}</textarea>
+      ${COMMERCIAL_STEPS.includes(d.step)?`<small class="muted">Your mailing address and a “reply no thanks to stop” line are added at the bottom automatically.</small>`:""}
+      <div class="row" style="margin-top:10px">
+        ${g&&d.to?`<button type="button" class="btn sm" onclick="draftSend('${d.id}')">✓ Approve &amp; send</button>`:""}
+        ${d.to?`<button type="button" class="btn ${g?"ghost":""} sm" onclick="draftGmail('${d.id}')">Open in Gmail</button>`:""}
+        ${d.phone?`<button type="button" class="btn ghost sm" onclick="draftText('${d.id}')">💬 Text</button>`:""}
+        <button type="button" class="btn ghost sm" onclick="draftCopy('${d.id}')">Copy</button>
+        <button type="button" class="btn ghost sm" onclick="draftMark('${d.id}','sent')">I sent it ✓</button>
+        <button type="button" class="btn danger sm" onclick="draftMark('${d.id}','skipped')">Skip</button>
+      </div></div>`:""}
+  </div>`;
+}
+const draftTimers={};
+function draftEdit(id,k,v){const d=L.drafts.find(x=>x.id===id);if(!d)return;d[k]=v;clearTimeout(draftTimers[id]);draftTimers[id]=setTimeout(()=>saveDraft(id).catch(e=>toast("Draft not saved: "+esc(e.message),true)),600);}
+async function saveDraft(id){clearTimeout(draftTimers[id]);const d=L.drafts.find(x=>x.id===id);if(d) await api("PUT","/api/drafts/"+id,{to:d.to,subject:d.subject,body:d.body});}
+async function fullDraft(id){await saveDraft(id);return api("GET",`/api/drafts/${id}/full`);}
+function afterDraft(r){if(r.drafts)L.drafts=r.drafts;if(r.realtors)L.realtors=r.realtors;openDraftId=null;renderLeads();}
+async function draftSend(id){
+  const d=L.drafts.find(x=>x.id===id);
+  if(!confirm(`Send “${d.subject}” to ${d.to} from your Gmail?`)) return;
+  try{await saveDraft(id);afterDraft(await api("POST",`/api/drafts/${id}/send`));toast("Sent to "+esc(d.to)+".");}
+  catch(e){toast("Not sent: "+esc(e.message),true);}
+}
+async function draftGmail(id){
+  const w=window.open("about:blank","_blank"); // open now so the popup isn't blocked
+  try{const f=await fullDraft(id);
+    const u=`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(f.to)}&su=${encodeURIComponent(f.subject)}&body=${encodeURIComponent(f.body)}`;
+    if(w) w.location=u; else location.href=u;
+    toast("Gmail opened. After you hit Send there, click <b>I sent it ✓</b>.");}
+  catch(e){if(w)w.close();toast(esc(e.message),true);}
+}
+async function draftText(id){
+  const d=L.drafts.find(x=>x.id===id);
+  try{const f=await fullDraft(id);location.href=`sms:${d.phone.replace(/[^\d+]/g,"")}?body=${encodeURIComponent(f.body)}`;toast("Texting app opened. After you send it, click <b>I sent it ✓</b>.");}
+  catch(e){toast(esc(e.message),true);}
+}
+async function draftCopy(id){try{const f=await fullDraft(id);await navigator.clipboard.writeText(f.body);toast("Message copied.");}catch(e){toast(esc(e.message),true);}}
+async function draftMark(id,status){
+  try{await saveDraft(id);afterDraft(await api("POST",`/api/drafts/${id}/mark`,{status,via:"manually"}));toast(status==="sent"?"Marked as sent.":"Skipped.");}
+  catch(e){toast(esc(e.message),true);}
+}
+
+/* realtors */
+realtorForm.stage.innerHTML=L.stages.map(s=>`<option>${s}</option>`).join("");
+function openRealtor(id){
+  const r=L.realtors.find(x=>x.id===id); if(!r) return; editingRealtor=id; realtorForm.reset();
+  for(const k of ["name","stage","email","phone","brokerage","town","listing","hook","notes"]) realtorForm[k].value=r[k]||"";
+  $("#realtorTitle").textContent=r.name;
+  $("#realtorLog").innerHTML=(r.profileUrl?`<a href="${esc(r.profileUrl)}" target="_blank" rel="noopener">Agent page ↗</a><br>`:"")+`Added ${fmtDate((r.added||"").slice(0,10))}`+(r.log||[]).map(l=>`<br>${fmtDate(l.at.slice(0,10))}: ${esc(l.what)}`).join("");
+  realtorDlg.showModal();
+}
+realtorForm.onsubmit=async e=>{
+  e.preventDefault();
+  try{const d=Object.fromEntries(new FormData(realtorForm));const r=await api("PUT","/api/realtors/"+editingRealtor,d);
+    L.realtors=L.realtors.map(x=>x.id===editingRealtor?r.realtor:x);L.drafts=r.drafts;realtorDlg.close();renderLeads();toast("Saved.");}
+  catch(err){toast("Couldn't save: "+esc(err.message),true);}
+};
+$("#delRealtor").onclick=async()=>{
+  if(!confirm("Delete this agent and any unsent drafts to them?")) return;
+  try{await api("DELETE","/api/realtors/"+editingRealtor);realtorDlg.close();loadLeads();}catch(e){toast(esc(e.message),true);}
+};
+function openAddRealtors(){addRForm.reset();addRDlg.showModal();}
+addRForm.onsubmit=async e=>{
+  e.preventDefault();
+  const realtors=addRForm.paste.value.split(/\r?\n/).map(l=>l.trim()).filter(Boolean).map(l=>{const [name,email,brokerage,town,...rest]=l.split(",").map(x=>x.trim());return {name,email,brokerage,town,listing:rest.join(", ")};});
+  if(!realtors.length){addRDlg.close();return;}
+  try{const r=await api("POST","/api/leads/import",{realtors});addRDlg.close();await loadLeads();
+    toast(`Added ${r.realtors} agent${r.realtors===1?"":"s"}`+(r.skipped?` (${r.skipped} skipped: duplicate or missing name/email)`:"")+". Their intros are in the approval queue.",r.skipped>0&&!r.realtors);}
+  catch(err){toast(esc(err.message),true);}
+};
+
+/* past customers */
+pastForm.service.innerHTML=svcOpts;
+function openPastCust(){pastForm.reset();pastDlg.showModal();}
+pastForm.onsubmit=async e=>{
+  e.preventDefault();
+  const d=Object.fromEntries(new FormData(pastForm));
+  try{const r=await api("POST","/api/leads/import",{customers:[d]});
+    if(!r.customers){toast(esc(d.name)+" is already in your customers.",true);return;}
+    const s=await api("GET","/api/state");S.jobs=s.jobs;render();
+    toast("Added "+esc(d.name)+". Add the next one, or Close.");pastForm.reset();pastForm.name.focus();}
+  catch(err){toast(esc(err.message),true);}
+};
+async function draftRebook(){
+  if(!confirm("Create a spring re-booking draft for every past customer (with email or phone) who hasn't opted out?\n\nNothing is sent. They go to the approval queue.")) return;
+  try{const r=await api("POST","/api/leads/rebook");await loadLeads();
+    toast(`${r.made} re-booking draft${r.made===1?"":"s"} added to the queue.`+(r.noContact?` ${r.noContact} customer${r.noContact===1?" has":"s have"} no email or phone.`:"")+(r.made?"":" (Everyone already has one for this season.)"));
+    qFilter="customer";renderLeads();$("#queueCard").scrollIntoView({behavior:"smooth"});}
+  catch(e){toast(esc(e.message),true);}
+}
+
+/* hangers */
+function logDrop(id){
+  const h=(S.hangers||{})[id]||{};
+  const n=prompt("How many hangers did you drop around this job?",h.count||25); if(n===null) return;
+  const st=prompt("Which streets? (optional, helps you avoid repeats)",h.streets||""); if(st===null) return;
+  S.hangers=Object.assign({},S.hangers,{[id]:{count:Math.max(0,parseInt(n)||0),streets:st,date:todayISO()}});
+  saveSet("hangers"); toast("Drop logged.");
+}
+
+/* settings */
+const LS_FIELDS=["phone","referralCredit","website","reviewLink","photosLink","weeklyTarget","fu1Days","fu2Days"];
+function openLeadSettings(){
+  const c=lcfg(); LS_FIELDS.forEach(k=>lsForm[k].value=c[k]??"");
+  const addr=String((S.mkt||{}).mailingAddress||"").trim();
+  $("#lsAddr").innerHTML=addr?`Mailing address on marketing emails: <b>${esc(addr)}</b> (change it in Marketing → ⚙ Google setup)`
+    :`<span style="color:var(--bad)">No mailing address yet.</span> The law (CAN-SPAM) requires one on realtor and re-booking emails. <a href="#" onclick="lsDlg.close();openMktSetup();return false">Add it in Google setup</a>. A PO box is fine.`;
+  lsDlg.showModal();
+}
+lsForm.onsubmit=async e=>{
+  e.preventDefault();
+  const v=Object.fromEntries(new FormData(lsForm));
+  for(const k of ["referralCredit","weeklyTarget","fu1Days","fu2Days"]) v[k]=Math.max(1,+v[k]||lcfg()[k]);
+  if(v.website&&!/^https?:\/\//i.test(v.website)) v.website="https://"+v.website;
+  if(+v.fu2Days<=+v.fu1Days){toast("Follow-up 2 must come after follow-up 1.",true);return;}
+  S.leads=v; L.config=Object.assign({},L.config,v);
+  try{await api("PUT","/api/settings/leads",{value:v});lsDlg.close();
+    const r=await api("POST","/api/leads/refresh");L.drafts=r.drafts;renderLeads();
+    toast("Settings saved."+(r.refreshed?` Updated ${r.refreshed} waiting draft${r.refreshed===1?"":"s"} you hadn't edited.`:""));}
+  catch(err){toast("Couldn't save: "+esc(err.message),true);}
+};
+
 /* render */
 function seasonStart(){const n=new Date();let y=n.getFullYear();let s=new Date(y,4,15);
   if(n>new Date(y,7,31)) s=new Date(y+1,4,15); return s;}
@@ -887,7 +1354,7 @@ function render(){
   if(days>0){$("#countdown").textContent=days+" days";}
   else{$("#countdown").textContent="In season";$("#countdownText").textContent="Busy season runs mid-May through end of August. Get after it.";}
   const yr=ss.getFullYear();
-  const seasonJobs=S.jobs.filter(j=>["Booked","Completed"].includes(j.status)&&(!j.date||j.date.startsWith(yr)));
+  const seasonJobs=S.jobs.filter(j=>["Booked","Completed"].includes(j.status)&&!j.pastImport&&(!j.date||j.date.startsWith(yr)));
   $("#goalInput").value=S.goal; $("#goalTxt").textContent=seasonJobs.length+" / "+S.goal;
   $("#goalBar").style.width=Math.min(100,seasonJobs.length/S.goal*100)+"%";
   if(document.activeElement!==$("#notes")) $("#notes").value=S.notes;
@@ -917,7 +1384,7 @@ function render(){
   $("#bySvc").innerHTML=Object.keys(by).length?Object.entries(by).sort((a,b)=>b[1]-a[1]).map(([s,v])=>`<div style="margin-bottom:10px"><div class="row" style="justify-content:space-between"><span>${esc(s)}</span><b>${money(v)}</b></div><div class="bar"><div style="width:${v/max*100}%"></div></div></div>`).join("")
     :`<div class="empty">Completed jobs will show up here.</div>`;
 
-  renderKanban(); renderSchedule(); renderMoney(); renderLists(); renderGoogle(); renderMarketing(); calc();
+  renderKanban(); renderSchedule(); renderMoney(); renderLists(); renderGoogle(); renderMarketing(); renderLeads(); calc();
 }
 function renderKanban(){
   const q=$("#search").value.toLowerCase();

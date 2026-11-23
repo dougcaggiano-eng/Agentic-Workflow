@@ -30,6 +30,23 @@ Double-click **Nashoba Dashboard** on the desktop. It opens in its own app windo
   - **Send email**: sends from your Gmail.
   - **Text**: opens your texting app (Phone Link on Windows) with the message filled in.
 
+## Lead Engine tab
+
+Three lead channels in one place. Claude finds people and writes the messages, and **nothing is sent until you approve it** in the approval queue.
+
+| Channel | How it works |
+|---|---|
+| 🏡 **Realtors** | Each Monday, open Claude Code in this folder and type `/find-realtors`. Claude researches ~20 local agents (public business emails only) and writes a personal opening line for each. Next time you open the dashboard, each agent has an intro email waiting. If they don't reply, follow-ups are drafted on **day 5** and **day 12**, then it stops. Move an agent to *Replied*, *Partner* or *Not interested* to stop their follow-ups early. |
+| ⭐ **Past customers** | Type `/find-past-customers` in Claude Code to pull them from Gmail (you confirm the list), or add them with **+ Past customer**. Before spring, click **Draft spring re-booking emails**. When any job is marked *Completed*, a thank-you + review request is drafted automatically. |
+| 🎁 **Referrals** | On a new lead's job, fill in **Referred by**. When that job is *Completed*, the referrer earns $50 off (set in ⚙ Settings). The dashboard shows what's owed and reminds you when you open their next job. |
+| 🚪 **Door hangers** | After each completed job, click **🖨 Hanger**, save as PDF, and upload to Vistaprint (Door Hangers, 4.25″ × 11″). The hanger never shows the customer's name or address. Click **Log drop** after you walk the street. |
+
+**Sending:** with Google connected, **✓ Approve & send** sends from your Gmail. Without it, **Open in Gmail** opens a ready-to-send email; send it there, then click **I sent it ✓** so follow-ups get scheduled.
+
+**Before you start (whenever you're ready):** open ⚙ Settings and add your phone, your website's quote page (for the QR code), and your Google review link. Also add a mailing address in Marketing → ⚙ Google setup. A PO box is fine; the law (CAN-SPAM) requires one on realtor and re-booking emails, and the dashboard won't send them without it.
+
+Claude's research lands in `data/inbox/` and is imported automatically (then moved to `data/inbox/imported/`).
+
 ## Marketing tab
 
 Tracks every campaign (emails, Google Ads, flyers, yard signs, referral pushes): what it cost and what it brought in. On each lead, set **Source** and pick a **Campaign** in the job form. The Campaigns table then shows leads, booked jobs, revenue, cost per lead, and return (revenue ÷ spend).

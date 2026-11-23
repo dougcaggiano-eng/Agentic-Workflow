@@ -6,6 +6,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
+import { createLeads } from './leads.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 try { process.loadEnvFile(path.join(ROOT, '.env')); } catch { /* .env optional */ }
@@ -38,7 +39,7 @@ db.exec(`
   CREATE TABLE IF NOT EXISTS kv (key TEXT PRIMARY KEY, value TEXT NOT NULL);
   CREATE TABLE IF NOT EXISTS campaigns (id TEXT PRIMARY KEY, data TEXT NOT NULL);
 `);
-const SETTING_KEYS = ['todos', 'links', 'notes', 'goal', 'day', 'mkt'];
+const SETTING_KEYS = ['todos', 'links', 'notes', 'goal', 'day', 'mkt', 'leads', 'hangers'];
 
 const kvGet = (k) => { const r = db.prepare('SELECT value FROM kv WHERE key=?').get(k); return r ? JSON.parse(r.value) : undefined; };
 const kvSet = (k, v) => db.prepare('INSERT INTO kv(key,value) VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value').run(k, JSON.stringify(v));
@@ -347,6 +348,9 @@ async function sendCampaign(id, testTo) {
   return result;
 }
 
+/* ---------- Lead engine (see leads.js) ---------- */
+const leads = createLeads({ db, ROOT, kvGet, allJobs, getJob, upsertJob, sendEmail, googleConnected, mkt, EMAIL_RE });
+
 /* ---------- HTTP helpers ---------- */
 const send = (res, status, data, headers = {}) => {
   const body = typeof data === 'string' || Buffer.isBuffer(data) ? data : JSON.stringify(data);
@@ -398,6 +402,7 @@ async function handle(req, res) {
   }
 
   if (p === '/api/ping') { lastPing = Math.max(lastPing, Date.now()); return send(res, 200, { ok: true }); }
+  if (await leads.route(m, p, url, req, res, { send, readBody })) return;
 
   /* Google OAuth */
   if (m === 'GET' && p === '/auth/google') {
@@ -439,7 +444,7 @@ async function handle(req, res) {
     });
   }
   if (m === 'GET' && p === '/api/export') {
-    const data = { exported: new Date().toISOString(), jobs: allJobs().map(({ eventId, ...j }) => j), expenses: allExpenses(), campaigns: allCampaigns(), ...settings() };
+    const data = { exported: new Date().toISOString(), jobs: allJobs().map(({ eventId, ...j }) => j), expenses: allExpenses(), campaigns: allCampaigns(), ...leads.exportData(), ...settings() };
     return send(res, 200, data, { 'content-disposition': `attachment; filename="nashoba-dashboard-backup-${new Date().toISOString().slice(0, 10)}.json"` });
   }
   if (m === 'POST' && p === '/api/import') {
@@ -450,6 +455,7 @@ async function handle(req, res) {
       for (const j of d.jobs) { const id = validId(j.id) ? j.id : crypto.randomUUID(); upsertJob(id, j); }
       for (const e of d.expenses) { const id = validId(e.id) ? e.id : crypto.randomUUID(); const { id: _, ...rest } = e; db.prepare('INSERT OR REPLACE INTO expenses(id,data) VALUES(?,?)').run(id, JSON.stringify(rest)); }
       for (const c of Array.isArray(d.campaigns) ? d.campaigns : []) saveCampaign(validId(c.id) ? c.id : crypto.randomUUID(), c);
+      leads.importBackup(d);
       for (const k of SETTING_KEYS) if (d[k] !== undefined) kvSet('s:' + k, d[k]);
       db.exec('COMMIT');
     } catch (e) { db.exec('ROLLBACK'); throw e; }
@@ -469,7 +475,10 @@ async function handle(req, res) {
     if (m === 'PUT') {
       const data = await readBody(req);
       if (!String(data.name || '').trim()) return send(res, 400, { error: 'Client name is required' });
+      const before = getJob(id);
+      if (before?.pastImport) { data.pastImport = true; data.year = before.year; } // server-owned flags the form doesn't carry
       upsertJob(id, data);
+      try { leads.onJobSaved(before, getJob(id)); } catch (e) { console.error('Lead engine:', e.message); }
       let calendar;
       try { calendar = await syncCalendar(id); } catch (e) { calendar = { error: e.message }; }
       return send(res, 200, { job: getJob(id), calendar });
@@ -479,6 +488,7 @@ async function handle(req, res) {
       let calendar = {};
       if (job?.eventId && googleConnected()) { try { await deleteEvent(job.eventId); } catch (e) { calendar.error = e.message; } }
       db.prepare('DELETE FROM jobs WHERE id=?').run(id);
+      leads.onJobDeleted(id);
       return send(res, 200, { ok: true, calendar });
     }
   }
