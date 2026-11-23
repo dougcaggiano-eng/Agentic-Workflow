@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nashoba Power Wash · Business Dashboard</title>
+<link rel="icon" href="/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0B2A6F; --royal:#1E5BC6; --water:#3FA9F5; --sky:#BFE6FF; --ink:#0A0A0A;
+    --bg:#F3F8FD; --card:#FFFFFF; --line:#DCE7F3; --muted:#5B6B82; --text:#13213A;
+    --good:#1F9D55; --warn:#D98A00; --bad:#C8372D;
+    --grad:linear-gradient(180deg,#BFE6FF 0%,#3FA9F5 35%,#1E5BC6 70%,#0B2A6F 100%);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:14px}
+  button,input,select,textarea{font:inherit}
+  a{color:var(--royal)}
+
+  /* Layout */
+  .app{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
+  aside{background:var(--ink);color:#fff;padding:18px 14px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:6px}
+  aside .logo{padding:6px 10px 18px}
+  aside .logo img{width:100%;display:block}
+  nav button{all:unset;display:flex;align-items:center;gap:10px;width:100%;box-sizing:border-box;padding:10px 12px;border-radius:8px;cursor:pointer;color:#C9D6EA;font-weight:500}
+  nav button:hover{background:#16213a;color:#fff}
+  nav button.active{background:var(--royal);color:#fff}
+  nav .ico{width:18px;text-align:center}
+  aside .foot{margin-top:auto;font-size:12px;color:#8494AE;padding:10px}
+  main{padding:28px 32px 60px;max-width:1280px;width:100%}
+  header.top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:22px;flex-wrap:wrap}
+  h1{font-family:Anton,Impact,sans-serif;font-style:italic;font-weight:400;font-size:34px;letter-spacing:.5px;margin:0;
+     background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-stroke:1.2px var(--ink);text-transform:uppercase}
+  h2{font-size:16px;margin:0 0 12px}
+  .sub{color:var(--muted);margin-top:4px}
+  section.view{display:none} section.view.active{display:block}
+
+  .grid{display:grid;gap:16px}
+  .g4{grid-template-columns:repeat(4,1fr)} .g3{grid-template-columns:repeat(3,1fr)} .g2{grid-template-columns:repeat(2,1fr)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px}
+  .kpi .label{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.6px;font-weight:600}
+  .kpi .val{font-size:28px;font-weight:700;margin-top:6px;color:var(--navy)}
+  .kpi .note{font-size:12px;color:var(--muted);margin-top:2px}
+  .hero{background:var(--navy);color:#fff;border-radius:14px;padding:22px 24px;display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:16px;position:relative;overflow:hidden}
+  .hero::after{content:"";position:absolute;right:-60px;top:-80px;width:280px;height:280px;border-radius:50%;border:26px solid rgba(63,169,245,.18)}
+  .hero .big{font-family:Anton,Impact,sans-serif;font-size:44px;line-height:1;color:var(--sky)}
+  .hero p{margin:6px 0 0;color:#C9D9F2}
+
+  .btn{border:2px solid var(--ink);background:linear-gradient(180deg,#3FA9F5,#1E5BC6 60%,#0B2A6F);color:#fff;font-weight:600;padding:8px 14px;border-radius:8px;cursor:pointer}
+  .btn:hover{filter:brightness(1.08)}
+  .btn.ghost{background:#fff;color:var(--navy);border:1px solid var(--line)}
+  .btn.sm{padding:4px 9px;font-size:12px}
+  .btn.danger{background:#fff;color:var(--bad);border:1px solid #f0c7c3}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .spread{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+
+  table{width:100%;border-collapse:collapse}
+  th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);padding:8px;border-bottom:1px solid var(--line)}
+  td{padding:10px 8px;border-bottom:1px solid #EEF3F9;vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  .empty{color:var(--muted);text-align:center;padding:26px}
+  .pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:600}
+  .s-Lead{background:#EAF2FF;color:var(--royal)} .s-Quoted{background:#FFF4DE;color:#9A6200}
+  .s-Booked{background:#DFF5FF;color:#0B6EA8} .s-Completed{background:#E1F6EA;color:var(--good)} .s-Lost{background:#F5E6E5;color:var(--bad)}
+
+  .kanban{display:grid;grid-template-columns:repeat(5,minmax(180px,1fr));gap:12px;overflow-x:auto}
+  .col{background:#EAF1F9;border-radius:10px;padding:10px;min-height:200px}
+  .col h3{font-size:12px;text-transform:uppercase;letter-spacing:.6px;margin:2px 4px 10px;color:var(--navy);display:flex;justify-content:space-between}
+  .jc{background:#fff;border:1px solid var(--line);border-radius:8px;padding:10px;margin-bottom:8px;cursor:pointer}
+  .jc:hover{border-color:var(--water)}
+  .jc b{display:block} .jc small{color:var(--muted)}
+
+  label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:4px}
+  input,select,textarea{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--text)}
+  textarea{min-height:70px;resize:vertical}
+  .form{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  .form .full{grid-column:1/-1}
+
+  .links a{display:flex;gap:12px;align-items:center;text-decoration:none;color:var(--text);padding:14px;border:1px solid var(--line);border-radius:10px;background:#fff}
+  .links a:hover{border-color:var(--water);box-shadow:0 2px 10px rgba(30,91,198,.08)}
+  .links .li{width:38px;height:38px;border-radius:9px;display:grid;place-items:center;background:var(--sky);font-size:18px;flex:none}
+  .links small{display:block;color:var(--muted)}
+
+  .check{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px dashed #E4ECF5}
+  .check input{width:auto;margin-top:3px}
+  .check.done span{text-decoration:line-through;color:var(--muted)}
+  ul.tight{margin:0;padding-left:18px} ul.tight li{margin:4px 0}
+
+  .calc-out{background:var(--navy);color:#fff;border-radius:12px;padding:20px}
+  .calc-out .price{font-family:Anton,Impact,sans-serif;font-size:46px;color:var(--sky)}
+  .calc-out .line{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.12);color:#D4E1F5}
+
+  dialog{border:none;border-radius:14px;padding:0;width:min(640px,94vw);box-shadow:0 20px 60px rgba(0,0,0,.25)}
+  dialog::backdrop{background:rgba(10,20,40,.55)}
+  dialog .dh{background:var(--navy);color:#fff;padding:14px 18px;font-weight:700}
+  dialog .db{padding:18px}
+  dialog .df{padding:12px 18px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:8px}
+
+  .bar{height:10px;background:#E4EDF7;border-radius:6px;overflow:hidden}
+  .bar > div{height:100%;background:var(--grad)}
+  .muted{color:var(--muted)}
+
+  /* Marketing */
+  .gcard h2{display:flex;align-items:center;gap:8px}
+  .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px 14px}
+  .stats div{font-size:12px;color:var(--muted)} .stats b{display:block;font-size:20px;color:var(--navy)}
+  .gstate{color:var(--muted);font-size:13px;line-height:1.5}
+  .gstate.err{color:var(--bad)}
+  .chk{display:inline-flex;align-items:center;gap:6px;font-weight:400;color:var(--text);margin:0 14px 6px 0;cursor:pointer}
+  .chk input{width:auto}
+  .recips{max-height:110px;overflow:auto;font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:8px;padding:6px 10px;margin-top:6px}
+
+  @media (max-width:980px){
+    .app{grid-template-columns:1fr} aside{position:static;height:auto;flex-direction:row;flex-wrap:wrap;align-items:center}
+    aside .logo{width:150px;padding:0 10px} nav{display:flex;flex-wrap:wrap} nav button{width:auto} aside .foot{display:none}
+    .g4,.g3{grid-template-columns:repeat(2,1fr)} .g2{grid-template-columns:1fr}
+    main{padding:18px}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside>
+    <div class="logo"><img src="/logo.png" alt="Nashoba Power Wash"></div>
+    <nav id="nav">
+      <button data-view="overview" class="active"><span class="ico">🏠</span>Overview</button>
+      <button data-view="pipeline"><span class="ico">📋</span>Jobs &amp; Quotes</button>
+      <button data-view="schedule"><span class="ico">📅</span>Schedule</button>
+      <button data-view="calculator"><span class="ico">🧮</span>Quote Calculator</button>
+      <button data-view="money"><span class="ico">💵</span>Money</button>
+      <button data-view="marketing"><span class="ico">📣</span>Marketing</button>
+      <button data-view="playbook"><span class="ico">🧰</span>Playbook</button>
+      <button data-view="growth"><span class="ico">🚀</span>Business Setup</button>
+      <button data-view="links"><span class="ico">🔗</span>Quick Links</button>
+    </nav>
+    <div class="foot">
+      <div id="googleBox" style="margin-bottom:10px"></div>
+      Saved on this computer.<br>
+      <a href="#" id="exportBtn" style="color:#8FC8F7">Export backup</a> ·
+      <a href="#" id="importBtn" style="color:#8FC8F7">Import</a>
+      <input type="file" id="importFile" accept=".json" hidden>
+    </div>
+  </aside>
+
+  <main>
+    <!-- OVERVIEW -->
+    <section class="view active" id="v-overview">
+      <header class="top"><div><h1>Business Dashboard</h1><div class="sub" id="today"></div></div>
+        <button class="btn" onclick="openJob()">+ New Lead</button></header>
+      <div class="hero">
+        <div><div class="big" id="countdown">—</div>
+          <p id="countdownText">until busy season (mid-May). Spring goal: book quotes early so you can start right after school.</p></div>
+        <div style="min-width:240px;position:relative;z-index:1">
+          <div class="row" style="justify-content:space-between;margin-bottom:6px"><span>Season booking goal</span><b id="goalTxt"></b></div>
+          <div class="bar"><div id="goalBar" style="width:0"></div></div>
+          <div style="margin-top:8px;font-size:12px;color:#C9D9F2">Goal: <input id="goalInput" type="number" min="1" style="width:60px;padding:2px 6px;border-radius:6px;border:none"> jobs this season</div>
+        </div>
+      </div>
+      <div class="grid g4" id="kpis"></div>
+      <div class="grid g2" style="margin-top:16px">
+        <div class="card"><h2>Coming up</h2><div id="upcoming"></div></div>
+        <div class="card"><h2>Needs follow-up</h2><div id="followups"></div></div>
+      </div>
+      <div class="grid g2" style="margin-top:16px">
+        <div class="card"><h2>Revenue by service</h2><div id="bySvc"></div></div>
+        <div class="card"><h2>Notes</h2><textarea id="notes" style="min-height:150px" placeholder="Ideas, reminders, anything…"></textarea></div>
+      </div>
+    </section>
+
+    <!-- PIPELINE -->
+    <section class="view" id="v-pipeline">
+      <header class="top"><div><h1>Jobs &amp; Quotes</h1><div class="sub">Every lead from first contact to paid. Click a card to edit.</div></div>
+        <div class="row"><input id="search" placeholder="Search name, town, service…" style="width:240px">
+        <button class="btn" onclick="openJob()">+ New Lead</button></div></header>
+      <div class="kanban" id="kanban"></div>
+    </section>
+
+    <!-- SCHEDULE -->
+    <section class="view" id="v-schedule">
+      <header class="top"><div><h1>Schedule</h1><div class="sub">Booked jobs by date. Remember: no jobs in the rain, and patio restorations need 2–3 days.</div></div></header>
+      <div class="card"><table><thead><tr><th>Date</th><th>Client</th><th>Town</th><th>Service</th><th>Est. hours</th><th>Quote</th><th></th></tr></thead><tbody id="schedBody"></tbody></table></div>
+    </section>
+
+    <!-- CALCULATOR -->
+    <section class="view" id="v-calculator">
+      <header class="top"><div><h1>Quote Calculator</h1><div class="sub">Based on your ~$80/hr rate plus supplies and travel. For your eyes only, not for advertising.</div></div></header>
+      <div class="grid g2">
+        <div class="card"><div class="form">
+          <div class="full"><label>Service</label><select id="cSvc"></select></div>
+          <div><label>Estimated hours</label><input id="cHrs" type="number" step="0.5" value="3.5"></div>
+          <div><label>Hourly rate ($)</label><input id="cRate" type="number" value="80"></div>
+          <div><label>Supplies ($): bleach, sand, fuel</label><input id="cSup" type="number" value="25"></div>
+          <div><label>Travel fee ($)</label><input id="cTravel" type="number" value="0"></div>
+          <div><label>Difficulty</label><select id="cDiff"><option value="0.9">Easy (−10%)</option><option value="1" selected>Normal</option><option value="1.15">Demanding, high areas (+15%)</option><option value="1.3">Very demanding (+30%)</option></select></div>
+          <div><label>Quote from</label><select id="cMode"><option value="person">In-person estimate (exact)</option><option value="photo">Photo (give a range)</option></select></div>
+          <div class="full"><label>Distance from Westford (miles), for reference</label><input id="cMiles" type="number" value="5" oninput="suggestTravel()"></div>
+        </div></div>
+        <div class="calc-out">
+          <div style="font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:#9FC2EE">Suggested quote</div>
+          <div class="price" id="cPrice">$0</div>
+          <div id="cLines" style="margin-top:8px"></div>
+          <div id="cRef" style="margin-top:14px;font-size:13px;color:#BFD3F0"></div>
+          <button class="btn" style="margin-top:16px" onclick="calcToLead()">Use this for a new lead →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- MONEY -->
+    <section class="view" id="v-money">
+      <header class="top"><div><h1>Money</h1><div class="sub">Income from completed jobs and expenses for the season.</div></div>
+        <div class="row"><select id="yearSel"></select><button class="btn" onclick="openExpense()">+ Add Expense</button></div></header>
+      <div class="grid g4" id="moneyKpis"></div>
+      <div class="grid g2" style="margin-top:16px">
+        <div class="card"><h2>Income (completed jobs)</h2><table><thead><tr><th>Date</th><th>Client</th><th>Service</th><th>Paid via</th><th>Amount</th></tr></thead><tbody id="incomeBody"></tbody></table></div>
+        <div class="card"><h2>Expenses</h2><table><thead><tr><th>Date</th><th>Item</th><th>Category</th><th>Amount</th><th></th></tr></thead><tbody id="expBody"></tbody></table></div>
+      </div>
+    </section>
+
+    <!-- MARKETING -->
+    <section class="view" id="v-marketing">
+      <header class="top"><div><h1>Marketing</h1><div class="sub">What each campaign costs and what it brings in, plus your Google numbers.</div></div>
+        <div class="row">
+          <select id="mDays" style="width:auto"><option value="7">Last 7 days</option><option value="28" selected>Last 28 days</option><option value="90">Last 90 days</option></select>
+          <button class="btn ghost" onclick="loadMarketing(true)" title="Fetch fresh numbers from Google">↻</button>
+          <button class="btn ghost" onclick="openMktSetup()">⚙ Google setup</button>
+          <button class="btn ghost" onclick="openCampaign(null,'Email')">✉️ Email campaign</button>
+          <button class="btn" onclick="openCampaign()">+ New Campaign</button>
+        </div></header>
+      <div class="grid g3" id="gCards"></div>
+      <div class="card" style="margin-top:16px">
+        <div class="spread"><h2 style="margin:0">Campaigns</h2><small class="muted">Pick a campaign on each lead (Jobs &amp; Quotes) to see what it brought in.</small></div>
+        <table><thead><tr><th>Campaign</th><th>Channel</th><th>Dates</th><th>Spend / budget</th><th>Leads</th><th>Booked</th><th>Revenue</th><th>Cost per lead</th><th>Return</th></tr></thead><tbody id="campBody"></tbody></table>
+      </div>
+      <div class="grid g2" style="margin-top:16px">
+        <div class="card"><h2>Leads by source (all time)</h2><div id="bySource"></div></div>
+        <div class="card"><h2>Google Ads campaigns</h2><div id="adsCamps"></div></div>
+      </div>
+    </section>
+
+    <!-- PLAYBOOK -->
+    <section class="view" id="v-playbook">
+      <header class="top"><div><h1>Playbook</h1><div class="sub">Your process, so every job is clear-cut from the first call.</div></div></header>
+      <div class="grid g3">
+        <div class="card"><h2>📞 Before you quote</h2><ul class="tight">
+          <li>Get <b>exact</b> surfaces and areas in writing (avoid "can you also…" after the job)</li>
+          <li>Confirm an outdoor water source</li>
+          <li>Ask for photos if they can't meet in person (quote a range)</li>
+          <li>Note the town and add the travel fee</li>
+          <li>Ask about pools, plants, fabric furniture near the work area</li>
+        </ul></div>
+        <div class="card"><h2>🚩 Walk away / be careful</h2><ul class="tight">
+          <li>Chewed-up or soft wooden decks</li>
+          <li>Oxidation on siding</li>
+          <li>Broken or cracked siding</li>
+          <li>Old siding not painted in a long time</li>
+          <li>Anything where washing could cause more damage</li>
+        </ul></div>
+        <div class="card"><h2>🌤 Job-day conditions</h2><ul class="tight">
+          <li>Sunny is ideal; a light sprinkle is OK, <b>no rain</b></li>
+          <li>Patio restoration: patio must dry fully before sanding (2–3 days)</li>
+          <li>Warn about dirt in the pool if working nearby</li>
+        </ul></div>
+        <div class="card"><h2>🧴 Bleach safety</h2><ul class="tight">
+          <li>Pre-rinse every surface <b>before</b> bleach</li>
+          <li>Keep away from wood, fabric, and windows</li>
+          <li>Rinse plants and windows thoroughly</li>
+          <li>Watch water drop-off points so bleach doesn't pool</li>
+        </ul></div>
+        <div class="card"><h2>🏠 House wash method</h2><ul class="tight">
+          <li>Foam cannon: apply bleach <b>bottom → top</b> (no streaks)</li>
+          <li>Pump sprayer for precise small areas</li>
+          <li>Rinse <b>top → bottom</b>, nearly parallel to siding</li>
+        </ul></div>
+        <div class="card"><h2>🧰 Gear</h2><ul class="tight">
+          <li>Honda GX200 pressure washer</li>
+          <li>Foam cannon + pump-up sprayer</li>
+          <li>Round surface cleaner (patios, large flat areas)</li>
+          <li>Turbo nozzle (fences); low pressure on wood</li>
+          <li>Polymeric sand (patio restoration)</li>
+        </ul></div>
+      </div>
+      <div class="card" style="margin-top:16px"><div class="spread"><h2 style="margin:0">Job-day checklist</h2><button class="btn ghost sm" onclick="resetDayChecklist()">Reset</button></div><div id="dayChecklist"></div></div>
+    </section>
+
+    <!-- GROWTH -->
+    <section class="view" id="v-growth">
+      <header class="top"><div><h1>Business Setup</h1><div class="sub">Steps to look more official and win customers' trust.</div></div>
+        <button class="btn" onclick="addTodo()">+ Add Task</button></header>
+      <div class="grid g2">
+        <div class="card"><div class="spread"><h2 style="margin:0">To-do</h2><span class="muted" id="todoProg"></span></div><div id="todoList"></div></div>
+        <div class="card"><h2>Why it matters</h2><ul class="tight">
+          <li>Customers worry about age and that you're not an LLC. Insurance and an LLC answer both worries.</li>
+          <li>Insurance protects you if bleach or pressure damages property.</li>
+          <li>Real estate agents usually want an insured vendor, so insurance helps you land those contacts.</li>
+          <li>Selling points to lead with: personal service, a game plan before every job, patio restoration (most competitors don't offer it), fast replies.</li>
+        </ul>
+        <h2 style="margin-top:18px">Competitors to watch</h2><ul class="tight"><li>Eastern Power Wash (Westford)</li><li>Top Quality Soft Wash</li></ul></div>
+      </div>
+    </section>
+
+    <!-- LINKS -->
+    <section class="view" id="v-links">
+      <header class="top"><div><h1>Quick Links</h1><div class="sub">Everything you use to run the business, in one place.</div></div>
+        <button class="btn" onclick="addLink()">+ Add Link</button></header>
+      <div class="grid g3 links" id="linkGrid"></div>
+    </section>
+  </main>
+</div>
+
+<!-- Job dialog -->
+<dialog id="jobDlg"><form method="dialog" id="jobForm">
+  <div class="dh" id="jobTitle">New Lead</div>
+  <div class="db"><div class="form">
+    <div><label>Client name</label><input name="name" required></div>
+    <div><label>Phone</label><input name="phone" type="tel"></div>
+    <div><label>Email</label><input name="email" type="email"></div>
+    <div><label>Created</label><input name="created" type="date"></div>
+    <div><label>Town</label><input name="town" list="towns"></div>
+    <div><label>Service</label><select name="service"></select></div>
+    <div><label>Status</label><select name="status"></select></div>
+    <div><label>Source</label><select name="source"><option>Website quote form</option><option>Google search</option><option>Google Ads</option><option>Google Business Profile</option><option>Email campaign</option><option>Referral</option><option>Facebook Ads</option><option>Flyer / door hanger</option><option>Yard sign</option><option>Real estate agent</option><option>Repeat customer</option><option>Other</option></select></div>
+    <div><label>Campaign</label><select name="campaign"></select></div>
+    <div style="display:flex;align-items:flex-end"><label class="chk"><input type="checkbox" name="noMarketing"> Don't send marketing emails</label></div>
+    <div><label>Quote ($)</label><input name="quote" type="number"></div>
+    <div><label>Est. hours</label><input name="hours" type="number" step="0.5"></div>
+    <div><label>Job date</label><input name="date" type="date"></div>
+    <div><label>Follow-up by</label><input name="followup" type="date"></div>
+    <div><label>Final amount paid ($)</label><input name="paid" type="number"></div>
+    <div><label>Paid via</label><select name="payMethod"><option value=""></option><option>Cash</option><option>Check</option><option>Venmo</option></select></div>
+    <div class="full"><label>Exact scope: what the customer agreed to</label><textarea name="scope" placeholder="e.g. Front + left side of house, back patio ~400 sq ft incl. re-sanding. NOT the driveway."></textarea></div>
+    <div class="full"><label>Notes (water source, pool, hazards…)</label><textarea name="notes"></textarea></div>
+  </div>
+  <div id="msgBox" style="margin-top:16px;padding-top:14px;border-top:1px solid var(--line)">
+    <div class="spread" style="margin-bottom:8px"><b>Message customer</b>
+      <select id="msgTpl" style="width:auto"><option value="quote">Quote confirmation</option><option value="reminder">Job-day reminder</option><option value="thanks">Thank you + review</option><option value="followup">Quote follow-up</option></select></div>
+    <input id="msgSubject" placeholder="Email subject" style="margin-bottom:8px">
+    <textarea id="msgBody" style="min-height:140px"></textarea>
+    <div class="row" style="margin-top:8px">
+      <button type="button" class="btn sm" id="msgEmail">✉️ Send email (Gmail)</button>
+      <button type="button" class="btn ghost sm" id="msgText">💬 Text (opens Messages)</button>
+      <button type="button" class="btn ghost sm" id="msgCopy">Copy</button>
+      <small class="muted" id="msgHint"></small>
+    </div>
+  </div></div>
+  <div class="df"><button type="button" class="btn danger" id="delJob">Delete</button>
+    <div class="row"><button type="button" class="btn ghost" onclick="jobDlg.close()">Cancel</button><button class="btn" value="save">Save</button></div></div>
+</form></dialog>
+
+<dialog id="expDlg"><form method="dialog" id="expForm">
+  <div class="dh">Add Expense</div>
+  <div class="db"><div class="form">
+    <div><label>Date</label><input name="date" type="date" required></div>
+    <div><label>Amount ($)</label><input name="amount" type="number" step="0.01" required></div>
+    <div class="full"><label>Item</label><input name="item" required placeholder="e.g. Bleach, polymeric sand, gas"></div>
+    <div class="full"><label>Category</label><select name="cat"><option>Supplies</option><option>Fuel / travel</option><option>Equipment</option><option>Marketing / ads</option><option>Insurance / licensing</option><option>Website</option><option>Other</option></select></div>
+  </div></div>
+  <div class="df"><span></span><div class="row"><button type="button" class="btn ghost" onclick="expDlg.close()">Cancel</button><button class="btn" value="save">Save</button></div></div>
+</form></dialog>
+
+<!-- Campaign dialog -->
+<dialog id="campDlg" style="width:min(720px,94vw)"><form method="dialog" id="campForm">
+  <div class="dh" id="campTitle">New Campaign</div>
+  <div class="db"><div class="form">
+    <div class="full"><label>Campaign name</label><input name="name" required placeholder="e.g. Spring 2027 house wash push"></div>
+    <div><label>Channel</label><select name="channel"></select></div>
+    <div><label>Status</label><select name="status"><option>Planned</option><option>Active</option><option>Done</option></select></div>
+    <div><label>Start</label><input name="start" type="date"></div>
+    <div><label>End</label><input name="end" type="date"></div>
+    <div><label>Budget ($)</label><input name="budget" type="number" step="0.01"></div>
+    <div><label>Spent so far ($)</label><input name="spend" type="number" step="0.01"></div>
+    <div class="full" id="adsLink"><label>Linked Google Ads campaign (fills in spend automatically)</label>
+      <div class="row" style="flex-wrap:nowrap"><select name="adsCampaignId"></select><button type="button" class="btn ghost sm" id="pullSpend" style="white-space:nowrap">Pull spend from Google Ads</button></div></div>
+    <div class="full"><label>Notes (offer, where it ran, what worked)</label><textarea name="notes"></textarea></div>
+  </div>
+  <div id="emailBox" style="margin-top:16px;padding-top:14px;border-top:1px solid var(--line)">
+    <b>Email: who gets it</b>
+    <div style="margin-top:8px" id="audStatus"></div>
+    <div id="audSvc"></div>
+    <div class="muted" id="audCount" style="font-size:12px"></div>
+    <div class="recips" id="audList"></div>
+    <div style="margin-top:12px"><label>Subject</label><input id="emSubject"></div>
+    <div style="margin-top:8px"><label>Message. Use {first}, {name}, {town} or {service} to personalize it.</label><textarea id="emBody" style="min-height:170px"></textarea></div>
+    <small class="muted">Your mailing address and an unsubscribe line are added to the bottom automatically. Each person gets their own email from your Gmail.</small>
+    <div class="row" style="margin-top:10px">
+      <input id="emTestTo" type="email" placeholder="Send a test to…" style="width:220px">
+      <button type="button" class="btn ghost sm" id="emTest">Send test</button>
+      <button type="button" class="btn sm" id="emSend">Send campaign</button>
+    </div>
+    <div id="emLog" class="muted" style="font-size:12px;margin-top:8px"></div>
+  </div></div>
+  <div class="df"><button type="button" class="btn danger" id="delCamp">Delete</button>
+    <div class="row"><button type="button" class="btn ghost" onclick="campDlg.close()">Cancel</button><button class="btn" value="save">Save</button></div></div>
+</form></dialog>
+
+<!-- Google marketing setup -->
+<dialog id="setupDlg"><form method="dialog" id="setupForm">
+  <div class="dh">Google marketing setup</div>
+  <div class="db">
+    <div id="setupStatus" class="gstate" style="margin-bottom:12px"></div>
+    <div class="form">
+      <div class="full"><label>Google Analytics property ID</label><input name="ga4Property" list="dlGa4" placeholder="e.g. 412345678"></div>
+      <div class="full"><label>Business Profile location</label><input name="gbpLocation" list="dlGbp" placeholder="locations/1234567890"></div>
+      <div><label>Google Ads customer ID</label><input name="adsCustomerId" list="dlAds" placeholder="123-456-7890"></div>
+      <div><label>Manager (MCC) account ID, if you use one</label><input name="adsLoginCustomerId" list="dlAds" placeholder="optional"></div>
+      <div class="full"><label>Mailing address for marketing emails (required by law; a PO box is fine)</label><input name="mailingAddress" placeholder="PO Box 123, Westford, MA 01886"></div>
+    </div>
+    <datalist id="dlGa4"></datalist><datalist id="dlGbp"></datalist><datalist id="dlAds"></datalist>
+    <div class="row" style="margin-top:12px"><button type="button" class="btn ghost sm" id="discoverBtn">🔍 Find my Google accounts</button><small class="muted" id="discoverMsg"></small></div>
+  </div>
+  <div class="df"><span></span><div class="row"><button type="button" class="btn ghost" onclick="setupDlg.close()">Cancel</button><button class="btn" value="save">Save</button></div></div>
+</form></dialog>
+
+<div id="toast" style="position:fixed;bottom:22px;right:22px;background:var(--ink);color:#fff;padding:12px 16px;border-radius:10px;max-width:380px;box-shadow:0 8px 30px rgba(0,0,0,.3);display:none;z-index:99"></div>
+<datalist id="towns"><option>Westford</option><option>Chelmsford</option><option>Groton</option><option>Acton</option><option>Tewksbury</option><option>Littleton</option><option>Lowell</option><option>Ayer</option><option>Burlington</option><option>Concord</option><option>Carlisle</option></datalist>
+
+<script>
+const SERVICES = {
+  "House Wash (vinyl siding)": {hrs:3.5, sup:25, range:"$300 typical, up to $350–380"},
+  "Patio Restoration (re-sand)": {hrs:10, sup:120, range:"$600–800 avg, up to $1,000"},
+  "Patio Clean": {hrs:3, sup:20, range:"Price by size"},
+  "Composite Deck Cleaning": {hrs:2.5, sup:15, range:"$200–250"},
+  "Fence Cleaning": {hrs:3, sup:10, range:"Usually hourly"},
+  "Mold & Grime Removal": {hrs:2, sup:15, range:"Price by job"},
+  "Other": {hrs:2, sup:10, range:"—"}
+};
+const STATUSES = ["Lead","Quoted","Booked","Completed","Lost"];
+const DEFAULT_LINKS = [
+  {icon:"🌐", title:"Wix Site Dashboard", sub:"Edit website, see quote requests", url:"https://manage.wix.com/dashboard/56bd8237-40d4-4269-b46d-903139d57c9a"},
+  {icon:"📣", title:"Facebook Ads Manager", sub:"Run and track ads", url:"https://adsmanager.facebook.com/"},
+  {icon:"✉️", title:"Gmail", sub:"Customer emails", url:"https://mail.google.com/"},
+  {icon:"📅", title:"Google Calendar", sub:"Block job days", url:"https://calendar.google.com/"},
+  {icon:"💸", title:"Venmo", sub:"Check payments", url:"https://venmo.com/"},
+  {icon:"⭐", title:"Google Business Profile", sub:"Reviews & local search", url:"https://business.google.com/"},
+  {icon:"🌦", title:"Weather: Westford 01886", sub:"Plan around rain", url:"https://forecast.weather.gov/zipcity.php?inputstring=01886"},
+  {icon:"🏛", title:"MA LLC Filing", sub:"Secretary of the Commonwealth", url:"https://corp.sec.state.ma.us/"},
+  {icon:"📁", title:"Google Drive", sub:"Before/after photos", url:"https://drive.google.com/"}
+];
+const DEFAULT_TODOS = [
+  "Get general liability insurance quotes (2–3 providers)",
+  "Decide on LLC and file with MA Secretary of the Commonwealth",
+  "Get an EIN from the IRS (free)",
+  "Open a separate business bank account / Venmo Business",
+  "Check whether your town requires a business certificate (DBA)",
+  "Photograph gear and best before/after jobs for the website",
+  "Ask past happy clients for a Google review",
+  "Set up a Google Business Profile",
+  "Make a one-page flyer for real estate agents",
+  "Launch spring Facebook ad campaign (March–April)"
+].map(t=>({text:t,done:false}));
+const DAY_CHECK = ["Weather checked, no rain","Water source confirmed","Scope reviewed with customer","Bleach, foam cannon, pump sprayer packed","Surface cleaner / turbo nozzle packed","Fuel for GX200","Plants, windows & fabrics pre-rinsed / protected","Before photos taken","After photos taken","Payment collected (cash / check / Venmo)"];
+
+const OLD_LOCAL_KEY="npw-dashboard-v1"; // from the browser-only version
+function base(){return {jobs:[],expenses:[],campaigns:[],links:DEFAULT_LINKS,todos:DEFAULT_TODOS,day:{},notes:"",goal:20,mkt:{},google:{}};}
+let S = base();
+let MK = null, mkSeq = 0; // Google marketing stats (loaded when the Marketing tab opens)
+
+async function api(method,url,body){
+  const r=await fetch(url,{method,headers:{"content-type":"application/json","x-npw":"1"},body:body!==undefined?JSON.stringify(body):undefined});
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok) throw new Error(j.error||("Request failed ("+r.status+")"));
+  return j;
+}
+let toastT;
+function toast(msg,isErr){const t=$("#toast");t.innerHTML=msg;t.style.background=isErr?"var(--bad)":"var(--ink)";t.style.display="block";clearTimeout(toastT);toastT=setTimeout(()=>t.style.display="none",isErr?7000:3500);}
+const newId=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+
+async function loadState(){
+  try{
+    const d=await api("GET","/api/state");
+    S=Object.assign(base(),d.settings,{jobs:d.jobs,expenses:d.expenses,campaigns:d.campaigns||[],google:d.google});
+  }catch(e){toast("Can't reach the dashboard server. Is it running? ("+esc(e.message)+")",true);}
+  render();
+  await migrateLocal();
+}
+// one-time move of data saved by the browser-only version
+async function migrateLocal(){
+  let old; try{old=JSON.parse(localStorage.getItem(OLD_LOCAL_KEY));}catch(e){}
+  if(!old||!(old.jobs?.length||old.expenses?.length)) return;
+  if(S.jobs.length||S.expenses.length){return;}
+  if(!confirm(`Found ${old.jobs.length} jobs and ${old.expenses.length} expenses saved in this browser. Move them into the dashboard database?`)) return;
+  await api("POST","/api/import",Object.assign(base(),old));
+  localStorage.removeItem(OLD_LOCAL_KEY);
+  toast("Moved your saved data into the database.");
+  loadState();
+}
+// settings (todos, links, notes, goal, day checklist)
+function saveSet(key){api("PUT","/api/settings/"+key,{value:S[key]}).catch(e=>toast("Couldn't save: "+esc(e.message),true));render();}
+const $=s=>document.querySelector(s);
+const money=n=>"$"+(Math.round(n||0)).toLocaleString();
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const todayISO=()=>new Date().toISOString().slice(0,10);
+const fmtDate=d=>d?new Date(d+"T12:00").toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"}):"—";
+const pill=s=>`<span class="pill s-${s}">${s}</span>`;
+
+/* nav */
+document.querySelectorAll("#nav button").forEach(b=>b.onclick=()=>show(b.dataset.view));
+function show(v){
+  document.querySelectorAll("#nav button").forEach(x=>x.classList.toggle("active",x.dataset.view===v));
+  document.querySelectorAll(".view").forEach(x=>x.classList.toggle("active",x.id==="v-"+v));
+  location.hash=v;
+  if(v==="marketing"&&!MK) loadMarketing();
+}
+if(location.hash) show(location.hash.slice(1));
+
+/* selects */
+const svcOpts=Object.keys(SERVICES).map(s=>`<option>${s}</option>`).join("");
+$("#cSvc").innerHTML=svcOpts; jobForm.service.innerHTML=svcOpts;
+jobForm.status.innerHTML=STATUSES.map(s=>`<option>${s}</option>`).join("");
+
+/* jobs */
+let editing=null;
+function openJob(id,prefill){
+  editing=id||null; jobForm.reset();
+  const j=id?S.jobs.find(x=>x.id===id):Object.assign({status:"Lead"},prefill||{});
+  jobForm.campaign.innerHTML=`<option value="">(none)</option>`+S.campaigns.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}</option>`).join("");
+  for(const k in j) if(jobForm[k]) jobForm[k].value=j[k];
+  jobForm.noMarketing.checked=!!j.noMarketing;
+  if(!id) jobForm.created.value=todayISO();
+  $("#jobTitle").textContent=id?"Edit: "+j.name:"New Lead";
+  $("#delJob").style.visibility=id?"visible":"hidden";
+  $("#msgBox").style.display=id?"block":"none";
+  if(id) fillTemplate();
+  jobDlg.showModal();
+}
+jobForm.onsubmit=async(e)=>{
+  e.preventDefault();
+  const d=Object.fromEntries(new FormData(jobForm));
+  const id=editing||newId();
+  try{
+    const res=await api("PUT","/api/jobs/"+id,d);
+    const i=S.jobs.findIndex(x=>x.id===id); if(i>=0) S.jobs[i]=res.job; else S.jobs.push(res.job);
+    jobDlg.close(); render();
+    const c=res.calendar||{};
+    if(c.error) toast("Saved, but Google Calendar sync failed: "+esc(c.error),true);
+    else if(c.link) toast(`Saved and synced to <a href="${esc(c.link)}" target="_blank" style="color:#8FC8F7">Google Calendar</a>.`);
+    else if(c.removed) toast("Saved. Removed from Google Calendar.");
+    else toast("Saved.");
+  }catch(err){toast("Couldn't save: "+esc(err.message),true);}
+};
+$("#delJob").onclick=async()=>{
+  if(!confirm("Delete this job?")) return;
+  try{const r=await api("DELETE","/api/jobs/"+editing);S.jobs=S.jobs.filter(x=>x.id!==editing);jobDlg.close();render();
+    toast(r.calendar?.error?"Deleted, but couldn't remove the calendar event: "+esc(r.calendar.error):"Deleted.",!!r.calendar?.error);}
+  catch(err){toast("Couldn't delete: "+esc(err.message),true);}
+};
+
+/* customer messages */
+const TEMPLATES={
+  quote:j=>["Your Nashoba Power Wash quote",
+`Hi ${first(j)},
+
+Thanks for reaching out to Nashoba Power Wash! Here's exactly what we agreed on:
+
+${j.scope||"[describe the exact areas and surfaces]"}
+
+Quote: ${j.quote?money(j.quote):"[amount]"}
+
+Anything not listed above isn't included, so if you'd like to add something, let me know now and I'll update the quote. Reply to confirm and we'll lock in a date.
+
+Doug
+Nashoba Power Wash`],
+  reminder:j=>["Reminder: your power wash is coming up",
+`Hi ${first(j)},
+
+Just a reminder that I'm scheduled for your ${(j.service||"job").toLowerCase()} on ${j.date?fmtDate(j.date):"[date]"}.
+
+A couple of things before I arrive:
+- Please make sure an outdoor water spigot is available and turned on.
+- Move cushions, fabric furniture, and anything delicate away from the work area.
+- If there's a pool nearby, some dirt may get in. I'll do my best to keep it out.
+
+If it's raining that day I'll reach out to reschedule.
+
+Doug
+Nashoba Power Wash`],
+  thanks:j=>["Thank you from Nashoba Power Wash",
+`Hi ${first(j)},
+
+Thanks again for choosing Nashoba Power Wash! I really enjoyed working on your ${(j.service||"project").toLowerCase()}.
+
+If you're happy with how it came out, a quick Google review would mean a lot to a small local business. And if you know anyone who could use a wash, I'd appreciate the referral.
+
+Payment can be cash, check, or Venmo.
+
+Doug
+Nashoba Power Wash`],
+  followup:j=>["Following up on your quote",
+`Hi ${first(j)},
+
+Just following up on the quote for your ${(j.service||"project").toLowerCase()}. I'm booking spring and summer dates now and would love to get you on the schedule.
+
+Any questions about the scope or price? Happy to walk through it.
+
+Doug
+Nashoba Power Wash`]
+};
+const first=j=>(j.name||"there").trim().split(/\s+/)[0];
+function currentJob(){return Object.assign({},S.jobs.find(x=>x.id===editing),Object.fromEntries(new FormData(jobForm)));}
+function fillTemplate(){
+  const j=currentJob(); const [subj,body]=TEMPLATES[$("#msgTpl").value](j);
+  $("#msgSubject").value=subj; $("#msgBody").value=body;
+  const g=S.google||{};
+  $("#msgEmail").disabled=!g.connected; $("#msgEmail").style.opacity=g.connected?1:.5;
+  $("#msgHint").textContent=!g.connected?"Connect Google (sidebar) to send email.":"";
+}
+$("#msgTpl").onchange=fillTemplate;
+$("#msgEmail").onclick=async()=>{
+  const saved=S.jobs.find(x=>x.id===editing);
+  if(jobForm.email.value!==(saved.email||"")){toast("Save the job first so the new email address is used.",true);return;}
+  if(!saved.email){toast("Add the customer's email and save first.",true);return;}
+  if(!confirm("Send this email to "+saved.email+"?")) return;
+  try{await api("POST",`/api/jobs/${editing}/email`,{subject:$("#msgSubject").value,body:$("#msgBody").value});toast("Email sent to "+esc(saved.email)+".");}
+  catch(e){toast("Email failed: "+esc(e.message),true);}
+};
+$("#msgText").onclick=()=>{
+  const phone=(jobForm.phone.value||"").replace(/[^\d+]/g,"");
+  if(!phone){toast("Add the customer's phone number first.",true);return;}
+  location.href=`sms:${phone}?body=${encodeURIComponent($("#msgBody").value)}`;
+};
+$("#msgCopy").onclick=()=>navigator.clipboard.writeText($("#msgBody").value).then(()=>toast("Copied."));
+
+/* expenses */
+function openExpense(){expForm.reset();expForm.date.value=todayISO();expDlg.showModal();}
+expForm.onsubmit=async(e)=>{
+  e.preventDefault();
+  const d=Object.fromEntries(new FormData(expForm)); const id=newId();
+  try{await api("PUT","/api/expenses/"+id,d);S.expenses.push(Object.assign(d,{id}));expDlg.close();render();}
+  catch(err){toast("Couldn't save: "+esc(err.message),true);}
+};
+async function delExp(id){if(!confirm("Delete expense?"))return;
+  try{await api("DELETE","/api/expenses/"+id);S.expenses=S.expenses.filter(e=>e.id!==id);render();}catch(err){toast(esc(err.message),true);}}
+
+/* google */
+function renderGoogle(){
+  const g=S.google||{}, box=$("#googleBox");
+  if(!g.configured) box.innerHTML=`<span style="color:#C9D6EA">Google: not set up</span><br><small>See README to connect Calendar &amp; Gmail</small>`;
+  else if(!g.connected) box.innerHTML=`<a class="btn sm" href="/auth/google" style="display:inline-block;text-decoration:none">Connect Google</a>`;
+  else box.innerHTML=`<span style="color:#7FE0A6">● Google connected</span><br>`+(g.marketing?"":`<a href="/auth/google" style="color:#FFD27A">Reconnect to enable Marketing</a><br>`)+`<a href="#" style="color:#8FC8F7" onclick="resyncGoogle();return false">Re-sync calendar</a> · <a href="#" style="color:#8FC8F7" onclick="disconnectGoogle();return false">Disconnect</a>`;
+}
+async function resyncGoogle(){try{const r=await api("POST","/api/google/resync");toast(`Synced ${r.synced} jobs.`+(r.errors.length?"<br>"+r.errors.map(esc).join("<br>"):""),r.errors.length>0);loadState();}catch(e){toast(esc(e.message),true);}}
+async function disconnectGoogle(){if(!confirm("Disconnect Google? Existing calendar events stay on your calendar."))return;await api("POST","/api/google/disconnect");S.google.connected=false;render();}
+
+/* calculator */
+["cSvc","cHrs","cRate","cSup","cTravel","cDiff","cMode"].forEach(id=>$("#"+id).addEventListener("input",calc));
+$("#cSvc").addEventListener("change",()=>{const s=SERVICES[$("#cSvc").value];$("#cHrs").value=s.hrs;$("#cSup").value=s.sup;calc();});
+function suggestTravel(){const m=+$("#cMiles").value||0;$("#cTravel").value=m<=5?0:Math.round((m-5)*2/5)*5;calc();}
+let lastCalc=0;
+function calc(){
+  const h=+$("#cHrs").value||0, r=+$("#cRate").value||0, sup=+$("#cSup").value||0, tr=+$("#cTravel").value||0, df=+$("#cDiff").value;
+  const labor=h*r*df, total=Math.round((labor+sup+tr)/5)*5; lastCalc=total;
+  const photo=$("#cMode").value==="photo";
+  $("#cPrice").textContent=photo?`${money(total*0.9)}–${money(total*1.15)}`:money(total);
+  $("#cLines").innerHTML=[["Labor ("+h+" hrs × $"+r+(df!==1?" × "+df:"")+")",labor],["Supplies",sup],["Travel",tr]]
+    .map(([a,b])=>`<div class="line"><span>${a}</span><b>${money(b)}</b></div>`).join("");
+  $("#cRef").innerHTML=`Your usual range for <b>${esc($("#cSvc").value)}</b>: ${SERVICES[$("#cSvc").value].range}`+
+    ($("#cSvc").value.startsWith("Patio Restoration")?"<br>Remember: hours span 2–3 days because the patio must dry before sanding.":"");
+}
+function calcToLead(){openJob(null,{service:$("#cSvc").value,quote:lastCalc,hours:$("#cHrs").value,status:"Lead"});}
+
+/* todos & checklist */
+function addTodo(){const t=prompt("New task:");if(t){S.todos.push({text:t,done:false});saveSet("todos");}}
+function toggleTodo(i){S.todos[i].done=!S.todos[i].done;saveSet("todos");}
+function delTodo(i){S.todos.splice(i,1);saveSet("todos");}
+function toggleDay(i){S.day[i]=!S.day[i];saveSet("day");}
+function resetDayChecklist(){S.day={};saveSet("day");}
+
+/* links */
+function addLink(){const title=prompt("Link name:");if(!title)return;let url=prompt("URL (https://…):");if(!url)return;
+  if(!/^https?:\/\//i.test(url)) url="https://"+url;
+  S.links.push({icon:"🔗",title,sub:"",url});saveSet("links");}
+function delLink(i){if(confirm("Remove this link?")){S.links.splice(i,1);saveSet("links");}}
+
+/* notes & goal */
+let notesT;
+$("#notes").addEventListener("input",e=>{S.notes=e.target.value;clearTimeout(notesT);
+  notesT=setTimeout(()=>api("PUT","/api/settings/notes",{value:S.notes}).catch(err=>toast("Notes not saved: "+esc(err.message),true)),600);});
+$("#goalInput").addEventListener("change",e=>{S.goal=+e.target.value||20;saveSet("goal");});
+
+/* export/import */
+$("#exportBtn").onclick=e=>{e.preventDefault();location.href="/api/export";};
+$("#importBtn").onclick=e=>{e.preventDefault();$("#importFile").click();};
+$("#importFile").onchange=async e=>{const f=e.target.files[0];if(!f)return;e.target.value="";
+  try{const d=JSON.parse(await f.text());
+    if(!confirm("Import this backup? Jobs and expenses with the same ID will be overwritten."))return;
+    const r=await api("POST","/api/import",Object.assign(base(),d));toast(`Imported ${r.jobs} jobs and ${r.expenses} expenses.`);loadState();}
+  catch(x){toast("That file isn't a valid backup: "+esc(x.message),true);}};
+
+$("#search").addEventListener("input",renderKanban);
+$("#yearSel").addEventListener("change",renderMoney);
+
+/* marketing */
+const CHANNELS=["Email","Google Ads","Google Business Profile","Facebook / Instagram ads","Flyers / door hangers","Yard signs","Referral program","Real estate agents","Other"];
+const DEFAULT_EMAIL={subject:"Book your spring power wash",statuses:["Completed"],services:[],body:`Hi {first},
+
+Spring is almost here, and I'm filling the Nashoba Power Wash schedule for the season now.
+
+If your siding, patio, deck, or fence could use a refresh after the winter, just reply to this email and I'll put together a quote. Past customers get first pick of dates.
+
+Thanks again for your business!
+
+Doug`};
+campForm.channel.innerHTML=CHANNELS.map(c=>`<option>${c}</option>`).join("");
+const money2=n=>"$"+(+n||0).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+const num=n=>Math.round(n||0).toLocaleString();
+const stat=(l,v)=>`<div><b>${v}</b>${l}</div>`;
+$("#mDays").onchange=()=>loadMarketing();
+
+async function loadMarketing(refresh){
+  const my=++mkSeq; MK=null; renderGCards();
+  let d;
+  try{d=await api("GET",`/api/marketing/stats?days=${$("#mDays").value}${refresh?"&refresh=1":""}`);}
+  catch(e){d={ads:{error:e.message},ga4:{error:e.message},gbp:{error:e.message}};}
+  if(my===mkSeq){MK=d;renderGCards();}
+}
+function gBody(d,fn){
+  if(!d) return `<div class="gstate">Loading…</div>`;
+  if(d.state==="disconnected") return `<div class="gstate">Connect Google (bottom of the sidebar) to see these numbers.</div>`;
+  if(d.state==="scope") return `<div class="gstate">Google needs your permission for marketing data. <a href="/auth/google">Reconnect Google</a>.</div>`;
+  if(d.setup) return `<div class="gstate">${esc(d.setup)} <a href="#" onclick="openMktSetup();return false">Open Google setup</a></div>`;
+  if(d.error) return `<div class="gstate err">${esc(d.error)}</div>`;
+  return fn(d);
+}
+function renderGCards(){
+  const d=MK||{};
+  $("#gCards").innerHTML=[
+    ["📈","Google Ads",d.ads,a=>`<div class="stats">${stat("Spent",money2(a.totals.cost))}${stat("Clicks",num(a.totals.clicks))}${stat("Impressions",num(a.totals.impressions))}${stat("Conversions",num(a.totals.conversions))}</div>
+      <div class="muted" style="margin-top:10px;font-size:12px">Cost per click: ${a.totals.clicks?money2(a.totals.cost/a.totals.clicks):"—"}</div>`],
+    ["🌐","Website (Analytics)",d.ga4,a=>`<div class="stats">${stat("Visitors",num(a.totals.users))}${stat("Visits",num(a.totals.sessions))}${stat("Page views",num(a.totals.pageViews))}${stat("Key events",num(a.totals.keyEvents))}</div>
+      ${a.channels.length?`<div style="margin-top:12px;font-size:12px"><div class="muted" style="margin-bottom:4px">Where visits came from</div>${a.channels.map(c=>`<div class="row" style="justify-content:space-between"><span>${esc(c.name)}</span><b>${num(c.sessions)}</b></div>`).join("")}</div>`:""}`],
+    ["⭐","Business Profile",d.gbp,a=>`<div class="stats">${stat("Search views",num(a.totals.searchViews))}${stat("Maps views",num(a.totals.mapsViews))}${stat("Calls",num(a.totals.calls))}${stat("Website clicks",num(a.totals.websiteClicks))}${stat("Direction requests",num(a.totals.directions))}${stat("Messages",num(a.totals.messages))}</div>`]
+  ].map(([i,t,x,f])=>`<div class="card gcard"><h2><span>${i}</span>${t}</h2>${gBody(MK?x:null,f)}</div>`).join("");
+  const a=d.ads;
+  $("#adsCamps").innerHTML=!MK?`<div class="empty">Loading…</div>`
+    :a?.campaigns?.length?`<table><thead><tr><th>Campaign</th><th>Status</th><th>Spent</th><th>Clicks</th><th>Conv.</th></tr></thead>${[...a.campaigns].sort((x,y)=>y.cost-x.cost).map(c=>`<tr><td>${esc(c.name)}</td><td><small>${esc(c.status)}</small></td><td>${money2(c.cost)}</td><td>${num(c.clicks)}</td><td>${num(c.conversions)}</td></tr>`).join("")}</table>`
+    :`<div class="empty">${a?.campaigns?"No Google Ads activity in this period.":"Your Google Ads campaigns will show here once Ads is connected."}</div>`;
+}
+function campStats(c){
+  const leads=S.jobs.filter(j=>j.campaign===c.id);
+  const won=leads.filter(j=>["Booked","Completed"].includes(j.status));
+  const rev=leads.filter(j=>j.status==="Completed").reduce((a,j)=>a+(+j.paid||+j.quote||0),0);
+  const spend=+c.spend||0;
+  return {leads:leads.length,won:won.length,rev,spend,cpl:leads.length&&spend?spend/leads.length:null,roi:spend?rev/spend:null};
+}
+function renderMarketing(){
+  const cs=[...S.campaigns].sort((a,b)=>(b.start||"").localeCompare(a.start||""));
+  $("#campBody").innerHTML=cs.length?cs.map(c=>{const s=campStats(c),ok=(c.sent||[]).filter(x=>x.ok).length;
+    return `<tr onclick="openCampaign('${c.id}')" style="cursor:pointer"><td><b>${esc(c.name)}</b><br><small class="muted">${esc(c.status||"")}${ok?` · emailed ${ok}`:""}</small></td><td>${esc(c.channel)}</td>
+      <td><small>${c.start?fmtDate(c.start):"—"}${c.end?" → "+fmtDate(c.end):""}</small></td><td>${money(s.spend)}${c.budget?` <small class="muted">/ ${money(c.budget)}</small>`:""}</td>
+      <td>${s.leads}</td><td>${s.won}</td><td>${money(s.rev)}</td><td>${s.cpl!=null?money(s.cpl):"—"}</td>
+      <td>${s.roi!=null?`<b style="color:${s.roi>=1?"var(--good)":"var(--bad)"}" title="Revenue ÷ spend">${s.roi.toFixed(1)}×</b>`:"—"}</td></tr>`;}).join("")
+    :`<tr><td colspan="9" class="empty">No campaigns yet. Try a spring email to past customers, or log a flyer drop.</td></tr>`;
+  const by={};
+  S.jobs.forEach(j=>{const b=by[j.source||"Not set"]||(by[j.source||"Not set"]={n:0,won:0,rev:0});b.n++;
+    if(["Booked","Completed"].includes(j.status))b.won++; if(j.status==="Completed")b.rev+=(+j.paid||+j.quote||0);});
+  const max=Math.max(1,...Object.values(by).map(b=>b.n));
+  $("#bySource").innerHTML=Object.keys(by).length?Object.entries(by).sort((a,b)=>b[1].n-a[1].n).map(([s,b])=>`<div style="margin-bottom:10px"><div class="row" style="justify-content:space-between"><span>${esc(s)}</span><span><b>${b.n}</b> <small class="muted">leads · ${b.won} booked · ${money(b.rev)}</small></span></div><div class="bar"><div style="width:${b.n/max*100}%"></div></div></div>`).join("")
+    :`<div class="empty">Set the Source on each lead to see where customers come from.</div>`;
+  renderGCards();
+}
+
+/* campaign dialog */
+let editingCamp=null, audLeft=0;
+const checkedIn=sel=>[...document.querySelectorAll(sel+" input:checked")].map(i=>i.value);
+function emailData(){return {subject:$("#emSubject").value,body:$("#emBody").value,statuses:checkedIn("#audStatus"),services:checkedIn("#audSvc")};}
+function openCampaign(id,channel){
+  editingCamp=id||null; campForm.reset();
+  const c=id?S.campaigns.find(x=>x.id===id):{channel:channel||"Other",status:"Planned",start:todayISO(),name:channel==="Email"?"Spring email to past customers":""};
+  for(const k of ["name","start","end","budget","spend","notes"]) campForm[k].value=c[k]??"";
+  campForm.channel.value=c.channel||"Other"; campForm.status.value=c.status||"Planned";
+  const em=Object.assign({},DEFAULT_EMAIL,c.email||{});
+  $("#audStatus").innerHTML=`<small class="muted">Customers with status: </small>`+STATUSES.map(s=>`<label class="chk"><input type="checkbox" value="${s}" ${em.statuses.includes(s)?"checked":""}>${s}</label>`).join("");
+  $("#audSvc").innerHTML=`<small class="muted">Service (leave all unchecked for any): </small>`+Object.keys(SERVICES).map(s=>`<label class="chk"><input type="checkbox" value="${esc(s)}" ${em.services.includes(s)?"checked":""}>${esc(s)}</label>`).join("");
+  $("#emSubject").value=em.subject; $("#emBody").value=em.body;
+  $("#campTitle").textContent=id?"Edit: "+c.name:"New Campaign";
+  $("#delCamp").style.visibility=id?"visible":"hidden";
+  fillAdsSelect(c.adsCampaignId); renderEmLog(c); campChannelChanged();
+  campDlg.showModal();
+}
+function fillAdsSelect(cur){
+  const list=MK?.ads?.campaigns||[];
+  const opts=list.map(c=>[c.id,c.name]); if(cur&&!list.some(c=>c.id===cur)) opts.push([cur,"Campaign "+cur]);
+  campForm.adsCampaignId.innerHTML=`<option value="">${list.length?"(not linked)":"(open Marketing with Google Ads connected to list campaigns)"}</option>`+opts.map(([v,n])=>`<option value="${esc(v)}">${esc(n)}</option>`).join("");
+  campForm.adsCampaignId.value=cur||"";
+}
+function campChannelChanged(){
+  const ch=campForm.channel.value;
+  $("#emailBox").style.display=ch==="Email"?"block":"none";
+  $("#adsLink").style.display=ch==="Google Ads"?"block":"none";
+  refreshAudience();
+}
+campForm.channel.onchange=campChannelChanged;
+$("#emailBox").addEventListener("change",e=>{if(e.target.type==="checkbox")refreshAudience();});
+async function refreshAudience(){
+  if($("#emailBox").style.display==="none") return;
+  try{
+    const r=await api("POST","/api/marketing/audience",emailData());
+    const sent=new Set(((S.campaigns.find(x=>x.id===editingCamp)||{}).sent||[]).filter(s=>s.ok).map(s=>s.email));
+    audLeft=r.recipients.filter(x=>!sent.has(x.email)).length;
+    $("#audCount").textContent=`${r.recipients.length} ${r.recipients.length===1?"person":"people"} with an email address`+(sent.size?` · ${audLeft} not emailed yet`:"")+(r.optedOut?` · ${r.optedOut} opted out (skipped)`:"");
+    $("#audList").innerHTML=r.recipients.map(x=>`${esc(x.name)} &lt;${esc(x.email)}&gt;${sent.has(x.email)?" ✓ sent":""}`).join("<br>")||"Nobody matches.";
+    $("#emSend").textContent=audLeft?`Send to ${audLeft} ${audLeft===1?"person":"people"}`:"Nobody left to send to";
+    $("#emSend").disabled=!audLeft; $("#emSend").style.opacity=audLeft?1:.5;
+  }catch(e){$("#audCount").textContent=e.message;}
+}
+function renderEmLog(c){
+  const log=c?.sent||[], ok=log.filter(x=>x.ok), bad=log.filter(x=>!x.ok);
+  $("#emLog").innerHTML=log.length?`Sent to ${ok.length}${c.sentAt?` (first send ${fmtDate(c.sentAt.slice(0,10))})`:""}.`+(bad.length?`<br><span style="color:var(--bad)">${bad.length} failed. Sending again retries them:<br>${bad.map(x=>esc(x.email+": "+x.error)).join("<br>")}</span>`:""):"";
+}
+function upsertCamp(c){const i=S.campaigns.findIndex(x=>x.id===c.id);if(i>=0)S.campaigns[i]=c;else S.campaigns.push(c);}
+async function saveCamp(){
+  const id=editingCamp||newId(), d=Object.fromEntries(new FormData(campForm)); d.email=emailData();
+  const r=await api("PUT","/api/campaigns/"+id,d); upsertCamp(r.campaign); editingCamp=id;
+  $("#delCamp").style.visibility="visible"; return r.campaign;
+}
+campForm.onsubmit=async e=>{e.preventDefault();try{await saveCamp();campDlg.close();render();toast("Campaign saved.");}catch(err){toast("Couldn't save: "+esc(err.message),true);}};
+$("#delCamp").onclick=async()=>{
+  if(!confirm("Delete this campaign? Leads tagged with it stay, they just lose the tag."))return;
+  try{await api("DELETE","/api/campaigns/"+editingCamp);S.campaigns=S.campaigns.filter(x=>x.id!==editingCamp);campDlg.close();render();toast("Deleted.");}
+  catch(err){toast("Couldn't delete: "+esc(err.message),true);}
+};
+$("#emTest").onclick=async()=>{
+  const to=$("#emTestTo").value.trim(); if(!to){toast("Type an email address to send the test to.",true);return;}
+  try{await saveCamp();await api("POST",`/api/campaigns/${editingCamp}/send`,{test:to});toast("Test sent to "+esc(to)+". Check how it looks before sending for real.");}
+  catch(e){toast("Test failed: "+esc(e.message),true);}
+};
+$("#emSend").onclick=async()=>{
+  const btn=$("#emSend");
+  try{
+    await saveCamp(); await refreshAudience();
+    if(!audLeft) return;
+    if(!confirm(`Send "${$("#emSubject").value}" to ${audLeft} ${audLeft===1?"person":"people"} from your Gmail?\n\nEach person gets their own email. This can't be undone.`)) return;
+    btn.disabled=true; btn.textContent="Sending… (keep this open)";
+    const r=await api("POST",`/api/campaigns/${editingCamp}/send`,{});
+    upsertCamp(r.campaign); renderEmLog(r.campaign); render();
+    toast(`Sent ${r.sent} email${r.sent===1?"":"s"}`+(r.failed?`, ${r.failed} failed (see the campaign).`:"."),r.failed>0);
+  }catch(e){toast("Couldn't send: "+esc(e.message),true);}
+  refreshAudience();
+};
+$("#pullSpend").onclick=async()=>{
+  try{await saveCamp();const r=await api("POST",`/api/campaigns/${editingCamp}/ads-spend`);upsertCamp(r.campaign);campForm.spend.value=r.campaign.spend;render();
+    toast(`Google Ads spend: ${money2(r.campaign.spend)} (${fmtDate(r.start)} to ${fmtDate(r.end)}).`);}
+  catch(e){toast(esc(e.message),true);}
+};
+
+/* Google marketing setup */
+const MKT_FIELDS=["ga4Property","gbpLocation","adsCustomerId","adsLoginCustomerId","mailingAddress"];
+function openMktSetup(){
+  const m=S.mkt||{}, g=S.google||{};
+  MKT_FIELDS.forEach(k=>setupForm[k].value=m[k]||"");
+  $("#setupStatus").innerHTML=!g.configured?"Google isn't set up yet. See the README."
+    :!g.connected?"Connect Google first (bottom of the sidebar)."
+    :!g.marketing?`Google needs your permission for Ads, Analytics and Business Profile. <a href="/auth/google">Reconnect Google</a>, then come back here.`
+    :"✅ Google connected with marketing access."+(g.adsToken?"":" Google Ads also needs a developer token in the .env file (see README).");
+  $("#discoverMsg").textContent=""; setupDlg.showModal();
+}
+setupForm.onsubmit=async e=>{
+  e.preventDefault();
+  const m=Object.fromEntries(new FormData(setupForm));
+  m.ga4Property=m.ga4Property.replace(/\D/g,""); m.adsCustomerId=m.adsCustomerId.replace(/\D/g,""); m.adsLoginCustomerId=m.adsLoginCustomerId.replace(/\D/g,"");
+  m.gbpLocation=m.gbpLocation.trim(); if(/^\d+$/.test(m.gbpLocation)) m.gbpLocation="locations/"+m.gbpLocation;
+  try{await api("PUT","/api/settings/mkt",{value:m});S.mkt=m;setupDlg.close();toast("Saved.");loadMarketing(true);}
+  catch(err){toast("Couldn't save: "+esc(err.message),true);}
+};
+$("#discoverBtn").onclick=async()=>{
+  $("#discoverMsg").textContent="Looking…";
+  try{
+    const r=await api("GET","/api/marketing/discover");
+    const fill=(dl,list)=>$(dl).innerHTML=list.map(x=>`<option value="${esc(x.id)}">${esc(x.name)}</option>`).join("");
+    fill("#dlGa4",r.ga4); fill("#dlGbp",r.gbp); fill("#dlAds",r.ads);
+    if(r.ga4.length===1&&!setupForm.ga4Property.value) setupForm.ga4Property.value=r.ga4[0].id;
+    if(r.gbp.length===1&&!setupForm.gbpLocation.value) setupForm.gbpLocation.value=r.gbp[0].id;
+    if(r.ads.length===1&&!setupForm.adsCustomerId.value) setupForm.adsCustomerId.value=r.ads[0].id;
+    const names={ga4:"Analytics",gbp:"Business Profile",ads:"Google Ads"};
+    const errs=Object.entries(r.errors).map(([k,v])=>names[k]+": "+v);
+    $("#discoverMsg").innerHTML=`Found ${r.ga4.length} Analytics, ${r.gbp.length} Business Profile, ${r.ads.length} Ads. Click a box to pick one.`+(errs.length?`<br><span style="color:var(--bad)">${errs.map(esc).join("<br>")}</span>`:"");
+  }catch(e){$("#discoverMsg").textContent=e.message;}
+};
+
+/* render */
+function seasonStart(){const n=new Date();let y=n.getFullYear();let s=new Date(y,4,15);
+  if(n>new Date(y,7,31)) s=new Date(y+1,4,15); return s;}
+function render(){
+  $("#today").textContent=new Date().toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric",year:"numeric"});
+  const ss=seasonStart(), now=new Date(), days=Math.ceil((ss-now)/864e5);
+  if(days>0){$("#countdown").textContent=days+" days";}
+  else{$("#countdown").textContent="In season";$("#countdownText").textContent="Busy season runs mid-May through end of August. Get after it.";}
+  const yr=ss.getFullYear();
+  const seasonJobs=S.jobs.filter(j=>["Booked","Completed"].includes(j.status)&&(!j.date||j.date.startsWith(yr)));
+  $("#goalInput").value=S.goal; $("#goalTxt").textContent=seasonJobs.length+" / "+S.goal;
+  $("#goalBar").style.width=Math.min(100,seasonJobs.length/S.goal*100)+"%";
+  if(document.activeElement!==$("#notes")) $("#notes").value=S.notes;
+
+  const open=S.jobs.filter(j=>j.status==="Lead"||j.status==="Quoted");
+  const booked=S.jobs.filter(j=>j.status==="Booked");
+  const done=S.jobs.filter(j=>j.status==="Completed");
+  const earned=done.reduce((a,j)=>a+(+j.paid||+j.quote||0),0);
+  const quoted=S.jobs.filter(j=>j.status!=="Lead"), won=S.jobs.filter(j=>["Booked","Completed"].includes(j.status));
+  const closeRate=quoted.length?Math.round(won.length/quoted.length*100):0;
+  $("#kpis").innerHTML=[
+    ["Open leads & quotes",open.length,money(open.reduce((a,j)=>a+(+j.quote||0),0))+" potential"],
+    ["Booked jobs",booked.length,money(booked.reduce((a,j)=>a+(+j.quote||0),0))+" scheduled"],
+    ["Earned (all time)",money(earned),done.length+" completed jobs"],
+    ["Close rate",closeRate+"%","of quotes booked"]
+  ].map(([l,v,n])=>`<div class="card kpi"><div class="label">${l}</div><div class="val">${v}</div><div class="note">${n}</div></div>`).join("");
+
+  const up=booked.filter(j=>j.date).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,6);
+  $("#upcoming").innerHTML=up.length?`<table>${up.map(j=>`<tr onclick="openJob('${j.id}')" style="cursor:pointer"><td><b>${fmtDate(j.date)}</b></td><td>${esc(j.name)}<br><small class="muted">${esc(j.town)}</small></td><td>${esc(j.service)}</td><td>${money(j.quote)}</td></tr>`).join("")}</table>`
+    :`<div class="empty">No booked jobs yet. Spring is the time to fill the calendar.</div>`;
+  const fu=open.sort((a,b)=>(a.followup||"9").localeCompare(b.followup||"9")).slice(0,6);
+  $("#followups").innerHTML=fu.length?`<table>${fu.map(j=>{const late=j.followup&&j.followup<=todayISO();return `<tr onclick="openJob('${j.id}')" style="cursor:pointer"><td>${esc(j.name)}<br><small class="muted">${esc(j.service)}</small></td><td>${pill(j.status)}</td><td style="color:${late?"var(--bad)":"inherit"}">${j.followup?(late?"⚠ ":"")+fmtDate(j.followup):"<span class='muted'>no date</span>"}</td></tr>`}).join("")}</table>`
+    :`<div class="empty">No open leads. <a href="#" onclick="openJob();return false">Add one</a></div>`;
+
+  const by={};done.forEach(j=>by[j.service]=(by[j.service]||0)+(+j.paid||+j.quote||0));
+  const max=Math.max(1,...Object.values(by));
+  $("#bySvc").innerHTML=Object.keys(by).length?Object.entries(by).sort((a,b)=>b[1]-a[1]).map(([s,v])=>`<div style="margin-bottom:10px"><div class="row" style="justify-content:space-between"><span>${esc(s)}</span><b>${money(v)}</b></div><div class="bar"><div style="width:${v/max*100}%"></div></div></div>`).join("")
+    :`<div class="empty">Completed jobs will show up here.</div>`;
+
+  renderKanban(); renderSchedule(); renderMoney(); renderLists(); renderGoogle(); renderMarketing(); calc();
+}
+function renderKanban(){
+  const q=$("#search").value.toLowerCase();
+  $("#kanban").innerHTML=STATUSES.map(st=>{
+    const list=S.jobs.filter(j=>j.status===st&&(!q||[j.name,j.town,j.service,j.scope].join(" ").toLowerCase().includes(q)));
+    return `<div class="col"><h3>${st}<span>${list.length}</span></h3>${list.map(j=>`<div class="jc" onclick="openJob('${j.id}')"><b>${esc(j.name)}</b><small>${esc(j.service)}</small><div class="row" style="justify-content:space-between;margin-top:6px"><small>${esc(j.town||"")}</small><b style="color:var(--navy)">${j.quote?money(j.quote):""}</b></div>${j.date?`<small>📅 ${fmtDate(j.date)}</small>`:""}</div>`).join("")||`<div class="muted" style="font-size:12px;padding:6px">Empty</div>`}</div>`;
+  }).join("");
+}
+function renderSchedule(){
+  const list=S.jobs.filter(j=>j.status==="Booked"||(j.status==="Completed"&&j.date)).sort((a,b)=>(a.date||"9").localeCompare(b.date||"9"));
+  $("#schedBody").innerHTML=list.length?list.map(j=>`<tr><td><b>${fmtDate(j.date)}</b></td><td>${esc(j.name)}</td><td>${esc(j.town)}</td><td>${esc(j.service)}</td><td>${esc(j.hours||"—")}</td><td>${money(j.quote)}</td><td>${pill(j.status)} <button class="btn ghost sm" onclick="openJob('${j.id}')">Edit</button></td></tr>`).join("")
+    :`<tr><td colspan="7" class="empty">Nothing booked yet. Move a quote to "Booked" and give it a date.</td></tr>`;
+}
+function renderMoney(){
+  const years=[...new Set([new Date().getFullYear(),...S.jobs.map(j=>(j.date||"").slice(0,4)),...S.expenses.map(e=>e.date.slice(0,4))].filter(Boolean).map(String))].sort().reverse();
+  const sel=$("#yearSel"), cur=sel.value||String(new Date().getFullYear());
+  sel.innerHTML=`<option value="all">All years</option>`+years.map(y=>`<option ${y===cur?"selected":""}>${y}</option>`).join("");
+  if(cur==="all") sel.value="all";
+  const y=sel.value, inY=d=>y==="all"||(d||"").startsWith(y);
+  const inc=S.jobs.filter(j=>j.status==="Completed"&&inY(j.date)), exp=S.expenses.filter(e=>inY(e.date));
+  const ti=inc.reduce((a,j)=>a+(+j.paid||+j.quote||0),0), te=exp.reduce((a,e)=>a+(+e.amount||0),0);
+  const hrs=inc.reduce((a,j)=>a+(+j.hours||0),0);
+  $("#moneyKpis").innerHTML=[["Income",money(ti)],["Expenses",money(te)],["Profit",money(ti-te)],["Effective $/hr",hrs?money((ti-te)/hrs):"—"]]
+    .map(([l,v])=>`<div class="card kpi"><div class="label">${l}</div><div class="val">${v}</div></div>`).join("");
+  $("#incomeBody").innerHTML=inc.length?inc.map(j=>`<tr><td>${fmtDate(j.date)}</td><td>${esc(j.name)}</td><td>${esc(j.service)}</td><td>${esc(j.payMethod||"—")}</td><td><b>${money(+j.paid||+j.quote)}</b></td></tr>`).join(""):`<tr><td colspan="5" class="empty">No completed jobs.</td></tr>`;
+  $("#expBody").innerHTML=exp.length?exp.sort((a,b)=>b.date.localeCompare(a.date)).map(e=>`<tr><td>${fmtDate(e.date)}</td><td>${esc(e.item)}</td><td>${esc(e.cat)}</td><td><b>${money(e.amount)}</b></td><td><button class="btn danger sm" onclick="delExp('${e.id}')">✕</button></td></tr>`).join(""):`<tr><td colspan="5" class="empty">No expenses logged.</td></tr>`;
+}
+function renderLists(){
+  const d=S.todos.filter(t=>t.done).length; $("#todoProg").textContent=d+" of "+S.todos.length+" done";
+  $("#todoList").innerHTML=S.todos.map((t,i)=>`<div class="check ${t.done?"done":""}"><input type="checkbox" ${t.done?"checked":""} onchange="toggleTodo(${i})"><span style="flex:1">${esc(t.text)}</span><a href="#" onclick="delTodo(${i});return false" class="muted" style="text-decoration:none">✕</a></div>`).join("");
+  $("#dayChecklist").innerHTML=`<div class="grid g2" style="gap:0 24px">`+DAY_CHECK.map((t,i)=>`<label class="check ${S.day[i]?"done":""}" style="font-weight:400;color:var(--text);margin:0;cursor:pointer"><input type="checkbox" ${S.day[i]?"checked":""} onchange="toggleDay(${i})"><span>${t}</span></label>`).join("")+`</div>`;
+  $("#linkGrid").innerHTML=S.links.map((l,i)=>`<a href="${esc(l.url)}" target="_blank" rel="noopener"><span class="li">${l.icon}</span><span style="flex:1"><b>${esc(l.title)}</b><small>${esc(l.sub)}</small></span><span class="muted" title="Remove" onclick="event.preventDefault();delLink(${i})">✕</span></a>`).join("");
+}
+if(new URLSearchParams(location.search).get("google")==="connected"){toast("Google connected. Booked jobs will sync to your calendar.");history.replaceState(null,"","/"+location.hash);}
+render();
+loadState();
+// keep the local server alive while this window is open
+setInterval(()=>fetch("/api/ping").catch(()=>{}),20000);
+</script>
+</body>
+</html>

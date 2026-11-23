@@ -1,0 +1,11 @@
+{
+  "name": "nashoba-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Nashoba Power Wash business dashboard (local)",
+  "engines": { "node": ">=22.13" },
+  "scripts": {
+    "start": "node server/server.js"
+  }
+}

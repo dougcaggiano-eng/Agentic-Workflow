@@ -1,0 +1,4 @@
+# Private business data and secrets: never commit
+data/
+.env
+node_modules/
