@@ -236,7 +236,7 @@
 
       <div class="grid g21" style="margin-top:16px">
         <div class="card" id="queueCard">
-          <div class="spread"><h2 style="margin:0">✅ Approval queue</h2><div class="tabs" id="qTabs"></div></div>
+          <div class="spread"><h2 style="margin:0">✅ Approval queue</h2><div class="row"><div class="tabs" id="qTabs"></div><button type="button" class="btn sm" id="sendAllBtn" onclick="sendAll()" style="display:none"></button></div></div>
           <div id="queueNote"></div>
           <div id="queue"></div>
         </div>
@@ -1170,6 +1170,9 @@ function renderLeads(){
   const notes=[];
   if(!S.google?.connected) notes.push(`Google isn't connected, so use <b>Open in Gmail</b>, hit Send there, then click <b>I sent it ✓</b> here.`);
   $("#queueNote").innerHTML=notes.map(n=>`<div class="infobox">${n}</div>`).join("");
+  const sendable=list.filter(d=>/^[^\s@<>,;]+@[^\s@<>,;]+\.[^\s@<>,;]+$/.test((d.to||"").trim()));
+  const sab=$("#sendAllBtn"); sab.style.display=sendable.length?"inline-block":"none";
+  if(!sab.dataset.busy) sab.textContent=`✉️ Send all ${sendable.length}`+(qFilter==="realtor"?" realtor":qFilter==="customer"?" customer":"")+` email${sendable.length===1?"":"s"}`;
   if(openDraftId&&!list.some(d=>d.id===openDraftId)) openDraftId=null;
   if(!openDraftId&&list.length) openDraftId=list[0].id;
   $("#queue").innerHTML=list.length?list.slice(0,25).map(draftCard).join("")+(list.length>25?`<div class="muted" style="text-align:center;padding:8px">+ ${list.length-25} more after these</div>`:"")
@@ -1234,6 +1237,31 @@ function draftCard(d){
         <button type="button" class="btn danger sm" onclick="draftMark('${d.id}','skipped')">Skip</button>
       </div></div>`:""}
   </div>`;
+}
+/* Send every emailable draft in the current tab at once (each person still gets their own email). */
+async function sendAll(){
+  const btn=$("#sendAllBtn"); if(btn.dataset.busy) return;
+  if(!S.google?.connected){toast("“Send all” sends through your Gmail, so connect Google first (bottom of the sidebar). Until then, use <b>Open in Gmail</b> on each draft.",true);return;}
+  const pending=L.drafts.filter(d=>d.status==="pending"&&(qFilter==="all"||d.kind===qFilter));
+  const ok=pending.filter(d=>/^[^\s@<>,;]+@[^\s@<>,;]+\.[^\s@<>,;]+$/.test((d.to||"").trim()));
+  if(!ok.length) return;
+  const by={}; ok.forEach(d=>by[STEP_LABEL[d.step]]=(by[STEP_LABEL[d.step]]||0)+1);
+  const c=lcfg(), warn=[];
+  if(!c.phone) warn.push("• Your phone number isn't in ⚙ Settings, so these emails won't include it.");
+  if(!c.website) warn.push("• Your website isn't in ⚙ Settings, so these emails won't include it.");
+  const textOnly=pending.length-ok.length;
+  if(!confirm(`Send ${ok.length} email${ok.length===1?"":"s"} from your Gmail now?\n\n`+Object.entries(by).map(([k,n])=>`• ${n} × ${k}`).join("\n")+
+    `\n\nEach person gets their own email, exactly as written in the queue. This can't be undone.`+
+    (textOnly?`\n\n${textOnly} draft${textOnly===1?" has":"s have"} no email address (text only) and will stay in the queue.`:"")+
+    (warn.length?"\n\nHeads up:\n"+warn.join("\n"):""))) return;
+  btn.dataset.busy="1"; btn.disabled=true; btn.textContent=`Sending ${ok.length}… keep this window open`;
+  try{
+    await Promise.all(Object.keys(draftTimers).map(id=>saveDraft(id))); // save any edits still being typed
+    const r=await api("POST","/api/drafts-bulk/send",{ids:ok.map(d=>d.id)});
+    L.drafts=r.drafts; L.realtors=r.realtors; openDraftId=null;
+    toast(`Sent ${r.sent} email${r.sent===1?"":"s"}.`+(r.failed.length?`<br>${r.failed.length} failed`+(r.stopped?", so I stopped. Everything unsent is still in the queue":" and stayed in the queue")+`:<br>`+r.failed.slice(0,3).map(f=>esc(f.name+": "+f.error)).join("<br>"):""),r.failed.length>0);
+  }catch(e){toast("Couldn't send: "+esc(e.message),true);}
+  delete btn.dataset.busy; btn.disabled=false; renderLeads();
 }
 const draftTimers={};
 function draftEdit(id,k,v){const d=L.drafts.find(x=>x.id===id);if(!d)return;d[k]=v;clearTimeout(draftTimers[id]);draftTimers[id]=setTimeout(()=>saveDraft(id).catch(e=>toast("Draft not saved: "+esc(e.message),true)),600);}

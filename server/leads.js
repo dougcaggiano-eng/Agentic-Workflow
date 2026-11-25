@@ -310,6 +310,26 @@ ${!c.website ? '<br><span class="warn">⚠ Add your website (quote page) in Lead
         send(res, 200, out); return true;
       }
       if (m === 'POST' && p === '/api/leads/rebook') { send(res, 200, draftRebooking()); return true; }
+      // Send several approved drafts in one go (the "Send all" button). Still one email per person.
+      if (m === 'POST' && p === '/api/drafts-bulk/send') {
+        const { ids } = await readBody(req);
+        if (!googleConnected()) { send(res, 400, { error: 'Connect Google first (bottom of the sidebar). Without it, use "Open in Gmail" one at a time.' }); return true; }
+        const want = new Set(Array.isArray(ids) ? ids : []);
+        const todo = allDrafts().filter(d => want.has(d.id) && d.status === 'pending' && EMAIL_RE.test(lc(d.to)));
+        if (todo.some(needsAddress)) { send(res, 400, { error: 'Add your mailing address in Marketing → ⚙ Google setup first. The law (CAN-SPAM) requires it on marketing emails.' }); return true; }
+        const out = { sent: 0, failed: [], skipped: want.size - todo.length };
+        let streak = 0;
+        for (const d of todo) {
+          try { await sendEmail({ to: d.to, subject: d.subject, body: fullBody(d) }); markSent(d, 'Gmail'); out.sent++; streak = 0; }
+          catch (e) {
+            out.failed.push({ name: d.name, error: e.message });
+            if (++streak >= 3 || /expired|not connected/i.test(e.message)) { out.stopped = true; break; } // Gmail/login problem: stop, the rest stay queued
+          }
+          await new Promise(r => setTimeout(r, 400)); // gentle pace for Gmail
+        }
+        tick();
+        send(res, 200, { ...out, drafts: allDrafts(), realtors: allRealtors() }); return true;
+      }
       if (m === 'POST' && p === '/api/leads/refresh') { // re-fill drafts you haven't edited, e.g. after adding your phone number
         let n = 0;
         for (const d of allDrafts().filter(d => d.status === 'pending' && !d.edited)) {
