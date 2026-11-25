@@ -47,6 +47,39 @@ Three lead channels in one place. Claude finds people and writes the messages, a
 
 Claude's research lands in `data/inbox/` and is imported automatically (then moved to `data/inbox/imported/`).
 
+## Ad Studio tab (Facebook + Instagram ads)
+
+Describe the ad you want in plain words. Claude writes the text, suggests a budget, a radius around Westford and an age range, and you edit anything before it goes anywhere.
+
+1. **✨ Write my ad**: type what the ad should do (or click an idea). Claude reads `BUSINESS_PROFILE_md.md`, so it knows your services and won't invent prices, discounts, reviews or insurance claims.
+2. **Ask Claude for changes** ("shorter", "mention patios too"), or edit the fields yourself. The preview on the right updates as you type.
+3. **Add a photo**: upload a before/after shot (square works best), or use your logo for now.
+4. **Send to Meta (paused)**: creates the campaign on Facebook/Instagram, *paused*. Nothing runs or spends. Meta reviews the ad, usually within a day. Click **Meta's own preview** to see exactly how it will look.
+5. **▶ Start ad**: it runs for the number of days you set, starting then. **⏸ Pause** and **⏹ End ad** work any time.
+
+**Money safety:**
+- Every ad has a fixed total budget and end date on Meta's side, so Meta can't spend more than the total shown.
+- A **spending cap** (default $100, in ⚙ Meta setup) covers any 30 days. Ads that are running or waiting hold their full budget; ended ads count what they actually spent. The dashboard refuses to send or start an ad that would go over it.
+- Once an ad is on Meta its text and budget are locked. Use **Make a copy** to change it.
+
+Each ad also appears in the Marketing tab (channel *Facebook / Instagram ads*) with its spend updated automatically. When a customer says they saw the ad, pick that campaign on their job to get cost per lead. Ad links carry `utm_source=facebook` so Google Analytics shows the visits too.
+
+### Connect Claude (one-time, ~5 minutes)
+1. Go to https://console.anthropic.com, sign up, and add a little credit under **Billing** ($5 lasts a long time; each ad draft costs a few cents).
+2. **Settings → API keys → Create key**, copy it, and put it in `.env` as `ANTHROPIC_API_KEY=...`.
+3. In a terminal in this folder, run `npm install` once (it installs the Claude library), then restart the dashboard.
+
+### Connect Meta (one-time, ~20 minutes)
+You need a Facebook Page and a Meta ad account with a payment method in **US dollars** (you have these if you've run Facebook ads before).
+1. Open **Meta Business Suite settings** (https://business.facebook.com/settings). Under **Accounts**, make sure your Page and your ad account are both listed in your business portfolio.
+2. Go to https://developers.facebook.com → **My Apps → Create app**. Choose the **Create & manage ads with Marketing API** use case (or app type *Business*) and connect it to your business portfolio.
+3. Back in business settings: **Users → System users → Add**, name it "Dashboard", role **Admin**. Then **Assign assets**: your ad account (full control / manage campaigns) and your Page (full control, or at least "Create ads").
+4. On that system user, click **Generate new token**, pick your app, set expiration to **Never**, and tick `ads_management`, `ads_read`, `business_management`, `pages_show_list`, `pages_read_engagement`. Copy the token into `.env` as `META_ACCESS_TOKEN=...`.
+5. Optional but recommended: in your app's **App settings → Basic**, copy the **App secret** into `.env` as `META_APP_SECRET=...`.
+6. Restart the dashboard, open **Ad Studio → ⚙ Meta setup**, click **Find my ad accounts & Pages**, pick them, add your quote page link, and click **Test connection**.
+
+If Meta says it can't use your Page, the Page wasn't assigned to the system user in step 3. The app is pinned to Marketing API **v26.0**. When Meta retires it (they'll email you, roughly a year out), set `META_API_VERSION` in `.env` to the newest version.
+
 ## Marketing tab
 
 Tracks every campaign (emails, Google Ads, flyers, yard signs, referral pushes): what it cost and what it brought in. On each lead, set **Source** and pick a **Campaign** in the job form. The Campaigns table then shows leads, booked jobs, revenue, cost per lead, and return (revenue ÷ spend).

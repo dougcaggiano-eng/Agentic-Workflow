@@ -4,8 +4,13 @@
   "private": true,
   "type": "module",
   "description": "Nashoba Power Wash business dashboard (local)",
-  "engines": { "node": ">=22.13" },
+  "engines": {
+    "node": ">=22.13"
+  },
   "scripts": {
     "start": "node server/server.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.14.0"
   }
 }

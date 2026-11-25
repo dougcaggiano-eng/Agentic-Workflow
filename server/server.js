@@ -7,6 +7,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { createLeads } from './leads.js';
+import { createAds } from './ads.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 try { process.loadEnvFile(path.join(ROOT, '.env')); } catch { /* .env optional */ }
@@ -39,7 +40,7 @@ db.exec(`
   CREATE TABLE IF NOT EXISTS kv (key TEXT PRIMARY KEY, value TEXT NOT NULL);
   CREATE TABLE IF NOT EXISTS campaigns (id TEXT PRIMARY KEY, data TEXT NOT NULL);
 `);
-const SETTING_KEYS = ['todos', 'links', 'notes', 'goal', 'day', 'mkt', 'leads', 'hangers'];
+const SETTING_KEYS = ['todos', 'links', 'notes', 'goal', 'day', 'mkt', 'leads', 'hangers', 'ads'];
 
 const kvGet = (k) => { const r = db.prepare('SELECT value FROM kv WHERE key=?').get(k); return r ? JSON.parse(r.value) : undefined; };
 const kvSet = (k, v) => db.prepare('INSERT INTO kv(key,value) VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value').run(k, JSON.stringify(v));
@@ -351,6 +352,9 @@ async function sendCampaign(id, testTo) {
 /* ---------- Lead engine (see leads.js) ---------- */
 const leads = createLeads({ db, ROOT, kvGet, allJobs, getJob, upsertJob, sendEmail, googleConnected, mkt, EMAIL_RE });
 
+/* ---------- Ad Studio: Claude writes Facebook/Instagram ads (see ads.js) ---------- */
+const ads = createAds({ db, ROOT, kvGet, getCampaign, saveCampaign, EMAIL_RE });
+
 /* ---------- HTTP helpers ---------- */
 const send = (res, status, data, headers = {}) => {
   const body = typeof data === 'string' || Buffer.isBuffer(data) ? data : JSON.stringify(data);
@@ -403,6 +407,7 @@ async function handle(req, res) {
 
   if (p === '/api/ping') { lastPing = Math.max(lastPing, Date.now()); return send(res, 200, { ok: true }); }
   if (await leads.route(m, p, url, req, res, { send, readBody })) return;
+  if (await ads.route(m, p, url, req, res, { send, readBody })) return;
 
   /* Google OAuth */
   if (m === 'GET' && p === '/auth/google') {
@@ -444,7 +449,7 @@ async function handle(req, res) {
     });
   }
   if (m === 'GET' && p === '/api/export') {
-    const data = { exported: new Date().toISOString(), jobs: allJobs().map(({ eventId, ...j }) => j), expenses: allExpenses(), campaigns: allCampaigns(), ...leads.exportData(), ...settings() };
+    const data = { exported: new Date().toISOString(), jobs: allJobs().map(({ eventId, ...j }) => j), expenses: allExpenses(), campaigns: allCampaigns(), ...leads.exportData(), ...ads.exportData(), ...settings() };
     return send(res, 200, data, { 'content-disposition': `attachment; filename="nashoba-dashboard-backup-${new Date().toISOString().slice(0, 10)}.json"` });
   }
   if (m === 'POST' && p === '/api/import') {
@@ -456,6 +461,7 @@ async function handle(req, res) {
       for (const e of d.expenses) { const id = validId(e.id) ? e.id : crypto.randomUUID(); const { id: _, ...rest } = e; db.prepare('INSERT OR REPLACE INTO expenses(id,data) VALUES(?,?)').run(id, JSON.stringify(rest)); }
       for (const c of Array.isArray(d.campaigns) ? d.campaigns : []) saveCampaign(validId(c.id) ? c.id : crypto.randomUUID(), c);
       leads.importBackup(d);
+      ads.importBackup(d);
       for (const k of SETTING_KEYS) if (d[k] !== undefined) kvSet('s:' + k, d[k]);
       db.exec('COMMIT');
     } catch (e) { db.exec('ROLLBACK'); throw e; }
@@ -513,7 +519,8 @@ async function handle(req, res) {
       const { sent, sentAt, ...d } = await readBody(req); // the send log is server-owned
       if (!String(d.name || '').trim()) return send(res, 400, { error: 'Campaign name is required' });
       const old = getCampaign(id);
-      saveCampaign(id, { ...d, sent: old?.sent || [], sentAt: old?.sentAt || null });
+      saveCampaign(id, { ...d, sent: old?.sent || [], sentAt: old?.sentAt || null,
+        metaCampaignId: old?.metaCampaignId, studioAdId: old?.studioAdId }); // Ad Studio links stay server-owned
       return send(res, 200, { campaign: getCampaign(id) });
     }
     if (m === 'DELETE' && !r[2]) { db.prepare('DELETE FROM campaigns WHERE id=?').run(id); return send(res, 200, { ok: true }); }

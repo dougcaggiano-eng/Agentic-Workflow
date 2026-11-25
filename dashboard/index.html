@@ -149,6 +149,38 @@
   .g21{grid-template-columns:2fr 1fr}
   .credit{background:#E1F6EA;color:#11603A;border-radius:8px;padding:8px 12px;margin-top:10px;font-size:13px}
 
+  /* Ad Studio */
+  .chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px} .chips button{border:1px solid var(--line);background:#F3F8FD;border-radius:999px;padding:5px 11px;cursor:pointer;font-size:12px;color:var(--navy);text-align:left}
+  .chips button:hover{border-color:var(--water)}
+  .bubble{background:#F3F8FD;border:1px solid var(--line);border-radius:12px;padding:9px 12px;font-size:13px;margin-bottom:8px;line-height:1.45}
+  .bubble.me{background:#fff;border-style:dashed}
+  .bubble b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--royal);margin-bottom:2px}
+  .adstrip{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;margin-bottom:16px}
+  .adrow{display:flex;gap:10px;align-items:center;padding:9px 12px 9px 9px;border:1px solid var(--line);border-radius:10px;cursor:pointer;background:#fff;min-width:220px;max-width:280px;flex:none}
+  .adrow:hover,.adrow.on{border-color:var(--water);box-shadow:0 2px 10px rgba(30,91,198,.08)}
+  .adrow img,.adrow .ph0{width:42px;height:42px;border-radius:8px;object-fit:cover;background:#E4EDF7;flex:none;display:grid;place-items:center;font-size:18px}
+  .adrow b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:190px}
+  .st-draft{background:#EEF3F9;color:var(--muted)} .st-ready{background:#FFF4DE;color:#9A6200} .st-running{background:#E1F6EA;color:var(--good)}
+  .st-paused{background:#EAF2FF;color:var(--royal)} .st-ended{background:#EFEFEF;color:#666} .st-bad{background:#F5E6E5;color:var(--bad)}
+  .fbm{border:1px solid #dddfe2;border-radius:10px;background:#fff;font-family:Helvetica,Arial,sans-serif;color:#050505;overflow:hidden}
+  .fbm .fh{display:flex;gap:8px;align-items:center;padding:10px 12px}
+  .fbm .av{width:40px;height:40px;border-radius:50%;background:#fff url(/logo.png) center/88% no-repeat;border:1px solid #dddfe2;flex:none}
+  .fbm .fh b{display:block;font-size:14px} .fbm .fh small{color:#65676b;font-size:12px}
+  .fbm .ft{padding:0 12px 10px;font-size:14px;line-height:1.35;white-space:pre-wrap;overflow-wrap:anywhere}
+  .fbm .ft a{color:#65676b;font-weight:600;cursor:pointer;text-decoration:none}
+  .fbm .fi{width:100%;aspect-ratio:1/1;object-fit:cover;display:block;background:#E4EDF7}
+  .fbm .noimg{aspect-ratio:1/1;display:grid;place-items:center;background:#E4EDF7;color:var(--muted);font-size:13px;text-align:center;padding:24px}
+  .fbm .fl{display:flex;align-items:center;gap:10px;background:#f0f2f5;padding:10px 12px}
+  .fbm .fl > div{flex:1;min-width:0} .fbm .fl small{display:block;color:#65676b;font-size:12px;text-transform:uppercase}
+  .fbm .fl b{display:block;font-size:15px;line-height:1.2;overflow-wrap:anywhere} .fbm .fl span{display:block;color:#65676b;font-size:13px}
+  .fbm .fcta{background:#e4e6eb;border-radius:6px;padding:8px 12px;font-weight:600;font-size:14px;white-space:nowrap}
+  .adprog{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 14px} .adprog span{font-size:12px;padding:3px 10px;border-radius:999px;background:#EEF3F9;color:var(--muted)}
+  .adprog span.done{background:var(--sky);color:var(--navy);font-weight:600} .adprog span.now{background:var(--royal);color:#fff;font-weight:600}
+  .adtotal{background:var(--navy);color:#fff;border-radius:10px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:12px}
+  .adtotal b{font-family:Anton,Impact,sans-serif;font-size:24px;color:var(--sky);font-weight:400} .adtotal small{color:#C9D9F2}
+  .working{opacity:.55;pointer-events:none}
+  #adEditor input:disabled,#adEditor select:disabled,#adEditor textarea:disabled{background:#F3F8FD;color:var(--text);opacity:1}
+
   @media (max-width:980px){
     .flow .lane{grid-template-columns:1fr} .steps{flex-wrap:wrap} .step{flex:1 1 140px} .lane-out{text-align:left} .timeline{grid-template-columns:1fr} .g21{grid-template-columns:1fr}
     .app{grid-template-columns:1fr} aside{position:static;height:auto;flex-direction:row;flex-wrap:wrap;align-items:center}
@@ -170,6 +202,7 @@
       <button data-view="calculator"><span class="ico">🧮</span>Quote Calculator</button>
       <button data-view="money"><span class="ico">💵</span>Money</button>
       <button data-view="marketing"><span class="ico">📣</span>Marketing</button>
+      <button data-view="ads"><span class="ico">✨</span>Ad Studio</button>
       <button data-view="playbook"><span class="ico">🧰</span>Playbook</button>
       <button data-view="growth"><span class="ico">🚀</span>Business Setup</button>
       <button data-view="links"><span class="ico">🔗</span>Quick Links</button>
@@ -328,6 +361,21 @@
       <div class="grid g2" style="margin-top:16px">
         <div class="card"><h2>Leads by source (all time)</h2><div id="bySource"></div></div>
         <div class="card"><h2>Google Ads campaigns</h2><div id="adsCamps"></div></div>
+      </div>
+    </section>
+
+    <!-- AD STUDIO -->
+    <section class="view" id="v-ads">
+      <header class="top"><div><h1>Ad Studio</h1><div class="sub">Describe the ad you want. Claude writes it and plans the budget. Nothing runs on Facebook or Instagram until you press Start.</div></div>
+        <div class="row"><button class="btn ghost" onclick="openAdSetup()">⚙ Meta setup</button><button class="btn" onclick="newAd()">+ New ad</button></div></header>
+      <div id="adWarn"></div>
+      <div class="adstrip" id="adStrip"></div>
+      <div class="grid g21">
+        <div class="card" id="adEditor"></div>
+        <div>
+          <div class="card"><div class="spread" style="margin-bottom:8px"><h2 style="margin:0">Preview</h2><small class="muted">Facebook feed, roughly</small></div><div id="adPreview"></div></div>
+          <div class="card" style="margin-top:16px"><h2>💵 Ad budget</h2><div id="adBudget"></div></div>
+        </div>
       </div>
     </section>
 
@@ -571,6 +619,24 @@
 </form></dialog>
 <datalist id="custList"></datalist>
 
+<!-- Ad Studio: Meta setup -->
+<dialog id="adSetupDlg"><form method="dialog" id="adSetupForm">
+  <div class="dh">Meta (Facebook + Instagram) setup</div>
+  <div class="db">
+    <div id="adSetupStatus" class="gstate" style="margin-bottom:12px"></div>
+    <div class="form">
+      <div class="full"><label>Ad account</label><input name="adAccountId" list="dlAdAcct" placeholder="act_1234567890"></div>
+      <div class="full"><label>Facebook Page the ads run from</label><input name="pageId" list="dlAdPage" placeholder="Page ID"></div>
+      <div class="full"><label>Web page the ads open (your quote page)</label><input name="link" placeholder="https://www.nashobapowerwash.com/quote"></div>
+      <div class="full"><label>Spending cap: the most ads can spend in any 30 days ($)</label><input name="capUsd" type="number" min="0" step="1"></div>
+    </div>
+    <datalist id="dlAdAcct"></datalist><datalist id="dlAdPage"></datalist>
+    <div class="row" style="margin-top:12px"><button type="button" class="btn ghost sm" onclick="adDiscover()">🔍 Find my ad accounts &amp; Pages</button><button type="button" class="btn ghost sm" onclick="adCheck()">Test connection</button></div>
+    <div class="muted" id="adSetupMsg" style="font-size:12px;margin-top:8px"></div>
+  </div>
+  <div class="df"><span></span><div class="row"><button type="button" class="btn ghost" onclick="adSetupDlg.close()">Cancel</button><button class="btn" value="save">Save</button></div></div>
+</form></dialog>
+
 <div id="toast"style="position:fixed;bottom:22px;right:22px;background:var(--ink);color:#fff;padding:12px 16px;border-radius:10px;max-width:380px;box-shadow:0 8px 30px rgba(0,0,0,.3);display:none;z-index:99"></div>
 <datalist id="towns"><option>Westford</option><option>Chelmsford</option><option>Groton</option><option>Acton</option><option>Tewksbury</option><option>Littleton</option><option>Lowell</option><option>Ayer</option><option>Burlington</option><option>Concord</option><option>Carlisle</option></datalist>
 
@@ -611,7 +677,7 @@ const DEFAULT_TODOS = [
 const DAY_CHECK = ["Weather checked, no rain","Water source confirmed","Scope reviewed with customer","Bleach, foam cannon, pump sprayer packed","Surface cleaner / turbo nozzle packed","Fuel for GX200","Plants, windows & fabrics pre-rinsed / protected","Before photos taken","After photos taken","Payment collected (cash / check / Venmo)"];
 
 const OLD_LOCAL_KEY="npw-dashboard-v1"; // from the browser-only version
-function base(){return {jobs:[],expenses:[],campaigns:[],links:DEFAULT_LINKS,todos:DEFAULT_TODOS,day:{},notes:"",goal:20,mkt:{},google:{},leads:{},hangers:{}};}
+function base(){return {jobs:[],expenses:[],campaigns:[],links:DEFAULT_LINKS,todos:DEFAULT_TODOS,day:{},notes:"",goal:20,mkt:{},google:{},leads:{},hangers:{},ads:{}};}
 let S = base();
 let MK = null, mkSeq = 0; // Google marketing stats (loaded when the Marketing tab opens)
 
@@ -662,6 +728,7 @@ function show(v){
   location.hash=v;
   if(v==="marketing"&&!MK) loadMarketing();
   if(v==="leads") loadLeads();
+  if(v==="ads") loadAds();
 }
 if(location.hash) show(location.hash.slice(1));
 
@@ -1373,6 +1440,260 @@ lsForm.onsubmit=async e=>{
   catch(err){toast("Couldn't save: "+esc(err.message),true);}
 };
 
+/* ================= AD STUDIO ================= */
+let A={ads:[],status:{}}, curAd=null, adWorking="", adLiveAt=0, adMore=false;
+const AD_STAGE={draft:["Draft","st-draft"],ready:["Ready to start","st-ready"],running:["Running","st-running"],paused:["Paused","st-paused"],ended:["Ended","st-ended"]};
+const CTA_LABEL={GET_QUOTE:"Get quote",LEARN_MORE:"Learn more",CONTACT_US:"Contact us",SIGN_UP:"Sign up"};
+const AD_IDEAS=["Spring house wash push: book before summer fills up. Westford, Chelmsford, Acton, Littleton.",
+  "Show off paver patio restoration: I clean the mold out of the joints and re-sand. Most local companies don't do this.",
+  "Composite deck cleaning before summer cookouts.",
+  "Local, owner does every job, clear written quote before starting. Free estimates."];
+const adById=id=>A.ads.find(a=>a.id===id);
+const adPill=a=>{const bad=a.meta?.effectiveStatus==="DISAPPROVED"&&a.stage==="ready";const [t,c]=bad?["Rejected by Meta","st-bad"]:AD_STAGE[a.stage];return `<span class="pill ${c}">${t}</span>`;};
+const adImg=a=>a.image?`/ad-image/${a.id}?v=${encodeURIComponent(a.image.file)}`:"";
+function putAdLocal(r){if(r.status)A.status=r.status;if(!r.ad)return;const i=A.ads.findIndex(x=>x.id===r.ad.id);if(i>=0)A.ads[i]=r.ad;else A.ads.unshift(r.ad);}
+
+async function loadAds(){
+  try{A=await api("GET","/api/ads");}catch(e){toast("Couldn't load Ad Studio: "+esc(e.message),true);}
+  if(curAd&&!adById(curAd)) curAd=null;
+  if(!curAd&&A.ads.length&&A.ads[0].stage!=="ended") curAd=A.ads[0].id;
+  renderAds(); refreshLiveAds();
+}
+// Pull fresh spend + Meta review status for anything on Meta (at most every 5 minutes).
+async function refreshLiveAds(force){
+  if(!force&&Date.now()-adLiveAt<5*60e3) return; adLiveAt=Date.now();
+  const live=A.ads.filter(a=>["ready","running","paused"].includes(a.stage)); if(!live.length) return;
+  let errs=0;
+  for(const a of live){try{putAdLocal(await api("POST",`/api/ads/${a.id}/refresh`));}catch(e){errs++;if(force)toast("Couldn't refresh from Meta: "+esc(e.message),true);}}
+  try{const d=await api("GET","/api/state");S.campaigns=d.campaigns||S.campaigns;}catch(e){}
+  if(!adWorking) renderAds();
+}
+
+function renderAds(){
+  if(!$("#v-ads")) return;
+  const st=A.status||{}, w=[];
+  if(!st.claude) w.push(`<b>Claude isn't connected yet.</b> Add your <code>ANTHROPIC_API_KEY</code> to the <code>.env</code> file (README → Ad Studio), then restart the dashboard.`);
+  if(!st.meta) w.push(`<b>Meta isn't connected yet.</b> You can write and preview ads now. To run them, add <code>META_ACCESS_TOKEN</code> to <code>.env</code> (README → Ad Studio), restart, then open ⚙ Meta setup.`);
+  else if(!st.accountId||!st.pageId) w.push(`Pick your ad account and Facebook Page in <a href="#" onclick="openAdSetup();return false">⚙ Meta setup</a>.`);
+  if(!st.defaultLink) w.push(`Add your website's quote page in <a href="#" onclick="openAdSetup();return false">⚙ Meta setup</a> so ads know where to send people.`);
+  $("#adWarn").innerHTML=w.map(x=>`<div class="warnbox">${x}</div>`).join("");
+  $("#adStrip").innerHTML=A.ads.map(a=>`<div class="adrow ${a.id===curAd?"on":""}" onclick="openAd('${a.id}')">${a.image?`<img src="${adImg(a)}" alt="">`:`<div class="ph0">✨</div>`}
+    <div style="min-width:0"><b>${esc(a.title)}</b>${adPill(a)}${a.stats?` <small class="muted">${money2(a.stats.spend)}</small>`:""}</div></div>`).join("");
+  $("#adStrip").style.display=A.ads.length?"flex":"none";
+  renderAdEditor(); renderAdSide();
+}
+function newAd(){curAd=null;adMore=false;renderAds();setTimeout(()=>$("#adBrief")?.focus(),0);}
+function openAd(id){curAd=id;adMore=false;renderAds();}
+
+function renderAdEditor(){
+  const a=adById(curAd), busy=adWorking?` class="working"`:"";
+  if(!a||!a.copy.primaryText){ // describe it
+    $("#adEditor").innerHTML=`<div${busy}><h2>✨ What should this ad do?</h2>
+      <p class="muted" style="margin-top:-6px">Say it however you like: the service, the towns, the feel, anything to push. Claude knows your business profile.</p>
+      <textarea id="adBrief" style="min-height:130px" placeholder="e.g. A spring ad for house washes in Westford, Chelmsford and Acton. Push people to book early before summer fills up. Friendly, not salesy.">${esc(a?.brief||"")}</textarea>
+      <div class="chips">${AD_IDEAS.map((t,i)=>`<button type="button" onclick="$('#adBrief').value=AD_IDEAS[${i}]">${esc(t)}</button>`).join("")}</div>
+      <div class="row" style="margin-top:14px"><button class="btn" onclick="writeAd()">${adWorking?esc(adWorking):"✨ Write my ad"}</button>
+      <small class="muted">Takes about 20–40 seconds and a few cents of Claude credit.</small></div></div>`;
+    return;
+  }
+  const draft=a.stage==="draft", m=a.meta||{}, dis=draft?"":" disabled";
+  if(draft&&!a.copy.link&&A.status.defaultLink) a.copy.link=A.status.defaultLink;
+  const steps=[["Written",1],["On Meta (paused)",!!m.adId],["Approved by Meta",["ACTIVE","CAMPAIGN_PAUSED","ADSET_PAUSED"].includes(m.effectiveStatus)||!!m.launchedAt],["Running",!!m.launchedAt],["Ended",a.stage==="ended"]];
+  const nowIdx=steps.findIndex(s=>!s[1]);
+  const hist=a.history||[], shown=adMore?hist:hist.slice(-2);
+  const review={PENDING_REVIEW:"⏳ Meta is reviewing this ad (usually within a day). You can press Start now; it begins once approved.",IN_PROCESS:"⏳ Meta is still processing this ad.",
+    DISAPPROVED:`❌ Meta rejected this ad${m.review?": "+esc(m.review):"."} Make a copy, fix it, and send the copy.`,WITH_ISSUES:`⚠ Meta flagged an issue${m.review?": "+esc(m.review):""}. Check it in Ads Manager.`}[m.effectiveStatus];
+  const mgr=m.campaignId?`https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=${encodeURIComponent(m.accountId||A.status.accountId||"")}&selected_campaign_ids=${encodeURIComponent(m.campaignId)}`:"";
+  const btn=(label,fn,cls="btn ghost sm")=>`<button type="button" class="${cls}" onclick="${fn}">${label}</button>`;
+  const actions={
+    draft:[btn("Delete","delAd()","btn danger sm"),btn("Make a copy","dupAd()"),btn(adWorking||"Send to Meta (paused) →","publishAd()","btn")],
+    ready:[btn("End without running","endAd()","btn danger sm"),btn("Make a copy","dupAd()"),btn("Meta's own preview","metaPreview()"),btn("Ads Manager ↗",`window.open('${mgr}','_blank')`),btn(adWorking||"▶ Start ad","startAd()","btn")],
+    running:[btn("⏹ End ad","endAd()","btn danger sm"),btn("↻ Refresh","refreshLiveAds(true)"),btn("Ads Manager ↗",`window.open('${mgr}','_blank')`),btn(adWorking||"⏸ Pause","pauseAd()","btn")],
+    paused:[btn("⏹ End ad","endAd()","btn danger sm"),btn("Ads Manager ↗",`window.open('${mgr}','_blank')`),btn(adWorking||"▶ Resume","startAd()","btn")],
+    ended:[btn("Ads Manager ↗",`window.open('${mgr}','_blank')`),btn("Make a copy","dupAd()","btn")],
+  }[a.stage];
+  const leads=m.dashCampaignId?S.jobs.filter(j=>j.campaign===m.dashCampaignId):[];
+  const s=a.stats;
+  $("#adEditor").innerHTML=`<div${busy}>
+    <div class="spread" style="margin-bottom:4px"><div class="row" style="flex:1;min-width:240px"><input id="adTitle" value="${esc(a.title)}" oninput="adEdit()" style="font-weight:700;font-size:16px;max-width:360px"${dis}>${adPill(a)}</div></div>
+    <div class="adprog">${steps.map((x,i)=>`<span class="${x[1]?"done":i===nowIdx?"now":""}">${x[1]?"✓ ":""}${x[0]}</span>`).join("")}</div>
+    ${review&&a.stage==="ready"?`<div class="${m.effectiveStatus==="DISAPPROVED"?"warnbox":"infobox"}">${review}</div>`:""}
+    ${s&&m.launchedAt?`<div class="stats" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px">${stat("Spent of "+money(a.totalUsd),money2(s.spend))}${stat("People reached",num(s.reach))}${stat("Link clicks",num(s.clicks))}${stat("Cost per click",s.clicks?money2(s.spend/s.clicks):"—")}</div>
+      <div class="muted" style="font-size:12px;margin:-6px 0 14px">${leads.length} lead${leads.length===1?"":"s"} tagged with this ad. When someone mentions the ad, set <b>Campaign</b> to “${esc(a.title)}” on their job. Updated ${new Date(s.fetchedAt).toLocaleString()}.</div>`:""}
+    ${hist.length>2&&!adMore?`<a href="#" class="muted" style="font-size:12px" onclick="adMore=true;renderAdEditor();return false">Show all ${hist.length} messages</a>`:""}
+    ${shown.map(h=>`<div class="bubble ${h.who==="doug"?"me":""}"><b>${h.who==="doug"?"You":"Claude"}</b>${esc(h.text)}</div>`).join("")}
+    ${draft?`<div class="row" style="flex-wrap:nowrap;margin-bottom:6px"><input id="adAsk" placeholder="Ask Claude for changes: “shorter”, “mention patios too”, “more local feel”…" onkeydown="if(event.key==='Enter')reviseAd()">
+      <button class="btn sm" style="white-space:nowrap" onclick="reviseAd()">${adWorking&&adWorking.startsWith("Rewriting")?esc(adWorking):"Ask Claude"}</button></div>`:""}
+    ${a.notes?`<div class="warnbox" style="margin-top:8px"><b>Check this:</b> ${esc(a.notes)}</div>`:""}
+    <div class="form" style="margin-top:14px">
+      <div class="full"><label>Main text</label><textarea id="adText" style="min-height:110px" oninput="adEdit()"${dis}>${esc(a.copy.primaryText)}</textarea></div>
+      <div><label>Headline (under 40 characters)</label><input id="adHead" value="${esc(a.copy.headline)}" oninput="adEdit()"${dis}></div>
+      <div><label>Description (optional)</label><input id="adDesc" value="${esc(a.copy.description)}" oninput="adEdit()"${dis}></div>
+      <div><label>Button</label><select id="adCta" onchange="adEdit()"${dis}>${Object.entries(CTA_LABEL).map(([k,v])=>`<option value="${k}" ${a.copy.cta===k?"selected":""}>${v}</option>`).join("")}</select></div>
+      <div><label>Opens this page</label><input id="adLink" value="${esc(a.copy.link)}" placeholder="https://…" oninput="adEdit()"${dis}></div>
+      <div class="full"><label>Photo</label>
+        <div class="row">${draft?`${btn("📷 Upload photo","$('#adFile').click()")}${btn("Use my logo","adLogo()")}${a.image?btn("Remove","adImgRemove()"):""}`:""}
+          <small class="muted" style="flex:1;min-width:200px">${a.advice?"Claude's tip: "+esc(a.advice):"Square photos work best (1080×1080 or bigger). Before/after shots get attention."}</small></div>
+        <input type="file" id="adFile" accept="image/jpeg,image/png" hidden onchange="adUpload(this)"></div>
+      <div><label>$ per day</label><input id="adDaily" type="number" min="1" step="0.5" value="${a.plan.dailyBudget}" oninput="adEdit()"${dis}></div>
+      <div><label>Days</label><input id="adDays" type="number" min="1" max="90" value="${a.plan.days}" oninput="adEdit()"${dis}></div>
+      <div><label>Miles around ${esc("Westford")}</label><input id="adRadius" type="number" min="1" max="50" value="${a.plan.radiusMiles}" oninput="adEdit()"${dis}></div>
+      <div><label>Ages (65 means 65+)</label><div class="row" style="flex-wrap:nowrap"><input id="adAgeMin" type="number" min="18" max="65" value="${a.plan.ageMin}" oninput="adEdit()"${dis}><span>to</span><input id="adAgeMax" type="number" min="18" max="65" value="${a.plan.ageMax}" oninput="adEdit()"${dis}></div></div>
+    </div>
+    <div class="adtotal"><div><small>Most this ad can ever spend</small><br><b id="adTotal">${money2(a.totalUsd)}</b></div><small id="adTotalNote" style="text-align:right"></small></div>
+    ${!draft?`<div class="muted" style="font-size:12px;margin-top:8px">This ad is on Meta, so its text and budget are locked. Use <b>Make a copy</b> to change it.</div>`:""}
+    <div class="spread" style="margin-top:14px;margin-bottom:0">${actions[0]}<div class="row">${actions.slice(1).join("")}</div></div>
+  </div>`;
+  adTotalNote();
+}
+function adTotalNote(){
+  const a=adById(curAd); if(!a||!$("#adTotalNote")) return;
+  const st=A.status||{}, left=Math.max(0,(st.cap||0)-(st.committed||0)+(a.stage==="draft"?0:a.totalUsd));
+  $("#adTotalNote").innerHTML=a.stage==="draft"?(a.totalUsd>left+0.001?`<span style="color:#FFB4A8">Over your cap: $${left.toFixed(2)} left in the last 30 days</span>`:`$${left.toFixed(2)} left under your cap`)
+    :`Meta can't go over this. It spreads it across ${a.plan.days} days.`;
+}
+function renderAdSide(){
+  const a=adById(curAd), st=A.status||{};
+  if(!a||!a.copy.primaryText){$("#adPreview").innerHTML=`<div class="empty">Your ad will show up here.</div>`;}
+  else{
+    const c=a.copy, t=c.primaryText, cut=t.length>125&&!adMore;
+    let domain=""; try{domain=new URL(c.link).hostname.replace(/^www\./,"");}catch(e){}
+    $("#adPreview").innerHTML=`<div class="fbm"><div class="fh"><div class="av"></div><div><b>Nashoba Power Wash</b><small>Sponsored · 🌐</small></div></div>
+      <div class="ft">${esc(cut?t.slice(0,125).replace(/\s+\S*$/,""):t)}${cut?`… <a onclick="adMore=true;renderAdSide()">See more</a>`:""}</div>
+      ${a.image?`<img class="fi" src="${adImg(a)}" alt="">`:`<div class="noimg">No photo yet.<br>Add one in the editor.</div>`}
+      <div class="fl"><div><small>${esc(domain||"your website")}</small><b>${esc(c.headline)}</b>${c.description?`<span>${esc(c.description)}</span>`:""}</div><div class="fcta">${CTA_LABEL[c.cta]||"Learn more"}</div></div></div>
+      <div class="muted" style="font-size:12px;margin-top:8px">Facebook shows about the first 125 characters, then “See more”. Instagram crops differently. After sending, use <b>Meta's own preview</b> for the real thing.</div>`;
+  }
+  const cap=st.cap||0, used=st.committed||0, pct=cap?Math.min(100,used/cap*100):0;
+  $("#adBudget").innerHTML=`<div class="row" style="justify-content:space-between;margin-bottom:6px"><span>Committed in the last 30 days</span><b>${money2(used)} / ${money(cap)}</b></div>
+    <div class="bar"><div style="width:${pct}%"></div></div>
+    <div class="muted" style="font-size:12px;margin-top:8px;line-height:1.5">Ads that are running or waiting to start hold their full budget. Ended ads count what they actually spent. The dashboard won't send or start an ad that would go over your cap. Change the cap in <a href="#" onclick="openAdSetup();return false">⚙ Meta setup</a>.</div>`;
+}
+
+/* editing */
+function adForm(){return {title:$("#adTitle").value,copy:{primaryText:$("#adText").value,headline:$("#adHead").value,description:$("#adDesc").value,cta:$("#adCta").value,link:$("#adLink").value.trim()},
+  plan:{dailyBudget:+$("#adDaily").value,days:+$("#adDays").value,radiusMiles:+$("#adRadius").value,ageMin:+$("#adAgeMin").value,ageMax:+$("#adAgeMax").value}};}
+let adSaveT;
+function adEdit(){
+  const a=adById(curAd); if(!a||a.stage!=="draft") return;
+  const f=adForm(); a.title=f.title; Object.assign(a.copy,f.copy); Object.assign(a.plan,f.plan);
+  a.totalUsd=Math.round((+f.plan.dailyBudget||0)*(+f.plan.days||0)*100)/100;
+  $("#adTotal").textContent=money2(a.totalUsd); adTotalNote(); renderAdSide();
+  clearTimeout(adSaveT); adSaveT=setTimeout(()=>saveAd().catch(e=>toast("Ad not saved: "+esc(e.message),true)),700);
+}
+async function saveAd(){
+  clearTimeout(adSaveT); const a=adById(curAd);
+  if(!a||a.stage!=="draft"||!$("#adText")) return;
+  putAdLocal(await api("PUT","/api/ads/"+a.id,adForm()));
+}
+async function adRun(label,fn){
+  if(adWorking) return; adWorking=label; renderAdEditor();
+  try{await fn();}catch(e){toast(esc(e.message),true);}
+  adWorking=""; renderAds();
+}
+function writeAd(){
+  const brief=($("#adBrief")?.value||"").trim(); if(!brief){toast("Describe the ad you want first.",true);return;}
+  const id=curAd||newId();
+  if(!adById(id)) A.ads.unshift({id,brief,title:"New ad",copy:{primaryText:""},plan:{},history:[],stage:"draft"}); // keeps the text on screen while Claude works
+  else adById(id).brief=brief;
+  curAd=id;
+  adRun("Claude is writing your ad…",async()=>{
+    try{putAdLocal(await api("POST",`/api/ads/${id}/write`,{brief}));}
+    catch(e){try{const d=await api("GET","/api/ads");A=d;if(!adById(id))curAd=null;}catch(_){} throw e;} // the server keeps what you typed
+  });
+}
+function reviseAd(){
+  const instruction=($("#adAsk")?.value||"").trim(); if(!instruction){toast("Type what you'd like changed.",true);return;}
+  const f=adForm();
+  adRun("Rewriting…",async()=>putAdLocal(await api("POST",`/api/ads/${curAd}/write`,{instruction,copy:f.copy,plan:f.plan})));
+}
+async function adUpload(input){
+  const file=input.files[0]; input.value=""; if(!file) return;
+  adRun("Uploading…",async()=>{
+    await saveAd();
+    const bmp=await createImageBitmap(file), k=Math.min(1,2048/Math.max(bmp.width,bmp.height));
+    const cv=document.createElement("canvas"); cv.width=Math.round(bmp.width*k); cv.height=Math.round(bmp.height*k);
+    const g=cv.getContext("2d"); g.fillStyle="#fff"; g.fillRect(0,0,cv.width,cv.height); g.drawImage(bmp,0,0,cv.width,cv.height);
+    putAdLocal(await api("POST",`/api/ads/${curAd}/image`,{dataUrl:cv.toDataURL("image/jpeg",0.9)}));
+    if(bmp.width<1080&&bmp.height<1080) toast("Photo added. It's on the small side, so it may look soft. 1080 pixels or wider is best.");
+  });
+}
+function adLogo(){adRun("Adding…",async()=>{await saveAd();putAdLocal(await api("POST",`/api/ads/${curAd}/image`,{useLogo:true}));});}
+function adImgRemove(){adRun("Removing…",async()=>{await saveAd();putAdLocal(await api("POST",`/api/ads/${curAd}/image`,{remove:true}));});}
+function dupAd(){adRun("Copying…",async()=>{await saveAd();const r=await api("POST",`/api/ads/${curAd}/duplicate`);putAdLocal(r);curAd=r.ad.id;toast("Copy made. Edit it, then send it to Meta.");});}
+async function delAd(){
+  if(!confirm("Delete this draft?")) return;
+  adRun("Deleting…",async()=>{const r=await api("DELETE","/api/ads/"+curAd);A.ads=A.ads.filter(x=>x.id!==curAd);A.status=r.status;curAd=null;});
+}
+
+/* Meta */
+function publishAd(){
+  const a=adById(curAd); if(!a) return;
+  if(!confirm(`Send “${a.title}” to Meta?\n\nIt's created PAUSED, so nothing runs or spends yet. Meta reviews it (usually within a day). You start it here when you're ready.`)) return;
+  adRun("Sending to Meta…",async()=>{await saveAd();const r=await api("POST",`/api/ads/${curAd}/publish`);putAdLocal(r);
+    try{const d=await api("GET","/api/state");S.campaigns=d.campaigns;render();}catch(e){}
+    toast("On Meta and paused. Check <b>Meta's own preview</b>, then press <b>Start ad</b> when you're ready.");});
+}
+function startAd(){
+  const a=adById(curAd); if(!a) return;
+  const resume=a.stage==="paused";
+  const msg=resume?`Resume “${a.title}”? It picks up where it left off and still can't spend more than ${money2(a.totalUsd)} in total.`
+    :`Start “${a.title}” now?\n\n• Runs ${a.plan.days} days, starting now\n• Shown to people within ${a.plan.radiusMiles} miles of Westford, ages ${a.plan.ageMin}–${a.plan.ageMax}${a.plan.ageMax>=65?"+":""}\n• Meta can spend up to ${money2(a.totalUsd)} in total (about ${money2(a.plan.dailyBudget)} a day), charged to your Meta ad account\n\nYou can pause or end it any time.`;
+  if(!confirm(msg)) return;
+  adRun(resume?"Resuming…":"Starting…",async()=>{putAdLocal(await api("POST",`/api/ads/${curAd}/launch`));toast(resume?"Ad resumed.":"Your ad is live. Spend and clicks show up here within a few hours.");});
+}
+function pauseAd(){adRun("Pausing…",async()=>{putAdLocal(await api("POST",`/api/ads/${curAd}/pause`));toast("Paused. Nothing more spends until you resume it.");});}
+function endAd(){
+  const a=adById(curAd); if(!a) return;
+  if(!confirm(a.meta?.launchedAt?`End “${a.title}” for good? It stops now and frees up the rest of its budget. You can't restart it, but you can make a copy.`
+    :`End “${a.title}” without running it? It never spends anything, and its budget is freed up.`)) return;
+  adRun("Ending…",async()=>{putAdLocal(await api("POST",`/api/ads/${curAd}/end`));try{const d=await api("GET","/api/state");S.campaigns=d.campaigns;render();}catch(e){}toast("Ad ended.");});
+}
+async function metaPreview(){
+  const w=window.open("about:blank","_blank");
+  try{const r=await api("GET",`/api/ads/${curAd}/preview`);if(w)w.location=r.url;else location.href=r.url;}
+  catch(e){if(w)w.close();toast(esc(e.message),true);}
+}
+
+/* Meta setup */
+function openAdSetup(){
+  const v=Object.assign({capUsd:100},S.ads||{}), st=A.status||{};
+  adSetupForm.adAccountId.value=v.adAccountId||st.accountId||""; adSetupForm.pageId.value=v.pageId||st.pageId||"";
+  adSetupForm.link.value=v.link||st.defaultLink||""; adSetupForm.capUsd.value=v.capUsd;
+  $("#adSetupStatus").innerHTML=(st.claude?"✅ Claude API key found.":"❌ No Claude API key. Add <code>ANTHROPIC_API_KEY</code> to <code>.env</code> and restart.")+"<br>"
+    +(st.meta?"✅ Meta access token found. Pick your accounts below, then Test connection.":"❌ No Meta access token. Follow README → Ad Studio to make one, add <code>META_ACCESS_TOKEN</code> to <code>.env</code>, and restart.");
+  $("#adSetupMsg").textContent=""; adSetupDlg.showModal();
+}
+adSetupForm.onsubmit=async e=>{
+  e.preventDefault();
+  const f=Object.fromEntries(new FormData(adSetupForm));
+  const v=Object.assign({},S.ads||{},{adAccountId:f.adAccountId.replace(/\D/g,""),pageId:f.pageId.replace(/\D/g,""),link:f.link.trim(),capUsd:Math.max(0,+f.capUsd||0)});
+  if(v.link&&!/^https:\/\//.test(v.link)){toast("The web page should start with https://",true);return;}
+  try{await api("PUT","/api/settings/ads",{value:v});S.ads=v;adSetupDlg.close();toast("Saved.");loadAds();}
+  catch(err){toast("Couldn't save: "+esc(err.message),true);}
+};
+async function adDiscover(){
+  $("#adSetupMsg").textContent="Looking…";
+  try{
+    const r=await api("GET","/api/ads/discover");
+    const fill=(dl,list)=>$(dl).innerHTML=list.map(x=>`<option value="${esc(x.id)}">${esc(x.name)}</option>`).join("");
+    fill("#dlAdAcct",r.accounts); fill("#dlAdPage",r.pages);
+    if(r.accounts.length===1&&!adSetupForm.adAccountId.value) adSetupForm.adAccountId.value=r.accounts[0].id;
+    if(r.pages.length===1&&!adSetupForm.pageId.value) adSetupForm.pageId.value=r.pages[0].id;
+    const errs=Object.values(r.errors);
+    $("#adSetupMsg").innerHTML=`Found ${r.accounts.length} ad account${r.accounts.length===1?"":"s"} and ${r.pages.length} Page${r.pages.length===1?"":"s"}. Click a box to pick one.`+(errs.length?`<br><span style="color:var(--bad)">${errs.map(esc).join("<br>")}</span>`:"");
+  }catch(e){$("#adSetupMsg").innerHTML=`<span style="color:var(--bad)">${esc(e.message)}</span>`;}
+}
+async function adCheck(){
+  $("#adSetupMsg").textContent="Checking… (save first if you changed anything)";
+  try{
+    const r=await api("GET","/api/ads/check"), a=r.account;
+    $("#adSetupMsg").innerHTML=`✅ Ad account: <b>${esc(a.name)}</b> (${esc(a.currency)})${a.active?"":` <span style="color:var(--bad)">· not active, check billing in Ads Manager</span>`}`
+      +(a.currency!=="USD"?` <span style="color:var(--bad)">· Ad Studio needs a USD account</span>`:"")
+      +(r.page?`<br>✅ Page: <b>${esc(r.page.name)}</b>`:`<br><span style="color:var(--bad)">No Page picked yet.</span>`);
+  }catch(e){$("#adSetupMsg").innerHTML=`<span style="color:var(--bad)">${esc(e.message)}</span>`;}
+}
+
 /* render */
 function seasonStart(){const n=new Date();let y=n.getFullYear();let s=new Date(y,4,15);
   if(n>new Date(y,7,31)) s=new Date(y+1,4,15); return s;}
@@ -1412,7 +1733,7 @@ function render(){
   $("#bySvc").innerHTML=Object.keys(by).length?Object.entries(by).sort((a,b)=>b[1]-a[1]).map(([s,v])=>`<div style="margin-bottom:10px"><div class="row" style="justify-content:space-between"><span>${esc(s)}</span><b>${money(v)}</b></div><div class="bar"><div style="width:${v/max*100}%"></div></div></div>`).join("")
     :`<div class="empty">Completed jobs will show up here.</div>`;
 
-  renderKanban(); renderSchedule(); renderMoney(); renderLists(); renderGoogle(); renderMarketing(); renderLeads(); calc();
+  renderKanban(); renderSchedule(); renderMoney(); renderLists(); renderGoogle(); renderMarketing(); renderLeads(); renderAds(); calc();
 }
 function renderKanban(){
   const q=$("#search").value.toLowerCase();
